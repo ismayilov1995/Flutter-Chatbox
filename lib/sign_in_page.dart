@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_chatbox/common_widget/social_login_button.dart';
 
 class SignInPage extends StatelessWidget {
   @override
@@ -22,14 +23,9 @@ class SignInPage extends StatelessWidget {
             SizedBox(
               height: 10,
             ),
-            RaisedButton(
-              child: Text(
-                "Sign In with Google",
-                style: TextStyle(color: Colors.white),
-              ),
-              color: Colors.redAccent,
-              shape: RoundedRectangleBorder(
-                  borderRadius: BorderRadius.circular(10.0)),
+            SocialLoginButton(
+              buttonText: "Login with Google",
+              radius: 10.0,
               onPressed: () {},
             )
           ],
