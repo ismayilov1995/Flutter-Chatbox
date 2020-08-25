@@ -1,5 +1,6 @@
 import 'package:firebase_core/firebase_core.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_chatbox/landing_page.dart';
 import 'package:flutter_chatbox/sign_in_page.dart';
 
 void main() async {
@@ -14,7 +15,7 @@ class App extends StatelessWidget {
     return MaterialApp(
       title: "Flutter Chatbox",
       theme: ThemeData(primarySwatch: Colors.purple),
-      home: SignInPage(),
+      home: LandingPage(),
     );
   }
 }
