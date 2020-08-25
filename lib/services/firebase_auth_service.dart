@@ -12,6 +12,7 @@ class FirebaseAuthService implements AuthBase {
       return Future.delayed(Duration.zero, () => _userFromFirebase(user));
     } catch (e) {
       print('XETA: $e');
+      return null;
     }
   }
 

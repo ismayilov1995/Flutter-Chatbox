@@ -1,7 +1,7 @@
 import 'package:firebase_core/firebase_core.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_chatbox/landing_page.dart';
-import 'package:flutter_chatbox/sign_in_page.dart';
+import 'package:flutter_chatbox/services/firebase_auth_service.dart';
 
 void main() async {
   WidgetsFlutterBinding.ensureInitialized();
@@ -15,7 +15,9 @@ class App extends StatelessWidget {
     return MaterialApp(
       title: "Flutter Chatbox",
       theme: ThemeData(primarySwatch: Colors.purple),
-      home: LandingPage(),
+      home: LandingPage(
+        authService: FirebaseAuthService(),
+      ),
       debugShowCheckedModeBanner: false,
     );
   }
