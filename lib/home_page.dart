@@ -1,25 +1,23 @@
 import 'package:flutter/material.dart';
-import 'package:flutter_chatbox/repository/user_repository.dart';
+import 'package:flutter_chatbox/viewmodel/user_model.dart';
+import 'package:provider/provider.dart';
 import 'models/user_model.dart';
-import 'services/auth_base.dart';
 
 class HomePage extends StatelessWidget {
-  final AuthBase _authService = UserRepository();
-  final VoidCallback onSignOut;
   final AppUser user;
 
-  HomePage({Key key, @required this.onSignOut, @required this.user})
-      : super(key: key);
+  HomePage({Key key, @required this.user}) : super(key: key);
 
   @override
   Widget build(BuildContext context) {
+//    final _userVM = Provider.of<UserViewmodel>(context);
     return Scaffold(
       appBar: AppBar(
         title: Text("Home Page"),
         actions: [
           IconButton(
             icon: Icon(Icons.exit_to_app),
-            onPressed: _signOut,
+            onPressed: () => _signOut(context),
           )
         ],
       ),
@@ -29,9 +27,8 @@ class HomePage extends StatelessWidget {
     );
   }
 
-  Future<bool> _signOut() async {
-    bool res = await _authService.signOut();
-    onSignOut();
-    return res;
+  void _signOut(BuildContext context) async {
+    final _userVM = Provider.of<UserViewmodel>(context, listen: false);
+    await _userVM.signOut();
   }
 }

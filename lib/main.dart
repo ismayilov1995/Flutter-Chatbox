@@ -1,5 +1,7 @@
 import 'package:firebase_core/firebase_core.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_chatbox/viewmodel/user_model.dart';
+import 'package:provider/provider.dart';
 import 'landing_page.dart';
 import 'locator.dart';
 
@@ -16,7 +18,8 @@ class App extends StatelessWidget {
     return MaterialApp(
       title: "Flutter Chatbox",
       theme: ThemeData(primarySwatch: Colors.purple),
-      home: LandingPage(),
+      home: ChangeNotifierProvider(
+          create: (context) => UserViewmodel(), child: LandingPage()),
       debugShowCheckedModeBanner: false,
     );
   }

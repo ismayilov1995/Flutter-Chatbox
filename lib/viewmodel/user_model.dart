@@ -13,9 +13,15 @@ class UserViewmodel with ChangeNotifier implements AuthBase {
 
   ViewState get state => _state;
 
+  AppUser get user => _user;
+
   set state(ViewState value) {
     _state = value;
     notifyListeners();
+  }
+
+  UserViewmodel() {
+    currentUser();
   }
 
   @override
@@ -51,6 +57,7 @@ class UserViewmodel with ChangeNotifier implements AuthBase {
   Future<bool> signOut() async {
     try {
       state = ViewState.BUSY;
+      _user = null;
       return await _userRepository.signOut();
     } catch (e) {
       print("Xeta: $e");

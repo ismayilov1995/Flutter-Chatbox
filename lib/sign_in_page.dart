@@ -1,14 +1,9 @@
 import 'package:flutter/material.dart';
-import 'package:flutter_chatbox/repository/user_repository.dart';
+import 'package:flutter_chatbox/viewmodel/user_model.dart';
+import 'package:provider/provider.dart';
 import 'common_widget/social_login_button.dart';
-import 'models/user_model.dart';
-import 'services/auth_base.dart';
 
 class SignInPage extends StatelessWidget {
-  final Function(AppUser) onSignIn;
-  final AuthBase _authService = UserRepository();
-  SignInPage({Key key, @required this.onSignIn}) : super(key: key);
-
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -60,7 +55,7 @@ class SignInPage extends StatelessWidget {
                 color: Colors.white,
                 size: 32,
               ),
-              onPressed: _guestMode,
+              onPressed: () => _guestMode(context),
             ),
           ],
         ),
@@ -68,8 +63,8 @@ class SignInPage extends StatelessWidget {
     );
   }
 
-  void _guestMode() async {
-    AppUser user = await _authService.signInAnonymous();
-    onSignIn(user);
+  void _guestMode(BuildContext context) async {
+    UserViewmodel _userVM = Provider.of<UserViewmodel>(context, listen: false);
+    await _userVM.signInAnonymous();
   }
 }
