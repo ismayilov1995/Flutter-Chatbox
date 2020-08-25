@@ -1,9 +1,8 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_chatbox/repository/user_repository.dart';
 import 'models/user_model.dart';
 import 'services/auth_base.dart';
-import 'services/firebase_auth_service.dart';
 import 'home_page.dart';
-import 'locator.dart';
 import 'sign_in_page.dart';
 
 class LandingPage extends StatefulWidget {
@@ -12,7 +11,7 @@ class LandingPage extends StatefulWidget {
 }
 
 class _LandingPageState extends State<LandingPage> {
-  AuthBase _authService = locator<FirebaseAuthService>();
+  AuthBase _authService = UserRepository();
   AppUser _user;
 
   @override

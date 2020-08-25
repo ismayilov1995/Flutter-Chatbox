@@ -1,14 +1,12 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_chatbox/repository/user_repository.dart';
 import 'common_widget/social_login_button.dart';
 import 'models/user_model.dart';
 import 'services/auth_base.dart';
 
-import 'locator.dart';
-import 'services/firebase_auth_service.dart';
-
 class SignInPage extends StatelessWidget {
   final Function(AppUser) onSignIn;
-  final AuthBase _authService = locator<FirebaseAuthService>();
+  final AuthBase _authService = UserRepository();
   SignInPage({Key key, @required this.onSignIn}) : super(key: key);
 
   @override
