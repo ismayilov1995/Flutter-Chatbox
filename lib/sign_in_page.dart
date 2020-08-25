@@ -25,9 +25,26 @@ class SignInPage extends StatelessWidget {
             ),
             SocialLoginButton(
               buttonText: "Login with Google",
-              radius: 10.0,
+              buttonColor: Colors.white,
+              textColor: Colors.black,
+              buttonIcon: Image.asset("images/google-logo.png"),
               onPressed: () {},
-            )
+            ),
+            SocialLoginButton(
+              buttonText: "Login with Facebook",
+              buttonIcon: Image.asset("images/facebook-logo.png"),
+              buttonColor: Colors.indigo,
+              onPressed: () {},
+            ),
+            SocialLoginButton(
+              buttonText: "Login with Email and Password",
+              buttonIcon: Icon(
+                Icons.email,
+                color: Colors.white,
+                size: 32,
+              ),
+              onPressed: () {},
+            ),
           ],
         ),
       ),
