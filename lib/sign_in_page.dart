@@ -1,3 +1,4 @@
+import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_chatbox/common_widget/social_login_button.dart';
 
@@ -45,9 +46,24 @@ class SignInPage extends StatelessWidget {
               ),
               onPressed: () {},
             ),
+            SocialLoginButton(
+              buttonText: "Guest mode",
+              buttonColor: Colors.pinkAccent,
+              buttonIcon: Icon(
+                Icons.face,
+                color: Colors.white,
+                size: 32,
+              ),
+              onPressed: _guestMode,
+            ),
           ],
         ),
       ),
     );
+  }
+
+  void _guestMode() async {
+    UserCredential result = await FirebaseAuth.instance.signInAnonymously();
+    debugPrint(result.user.uid);
   }
 }

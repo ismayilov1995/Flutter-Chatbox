@@ -1,0 +1,48 @@
+{
+  "project_info": {
+    "project_number": "118733580734",
+    "firebase_url": "https://flutterchatbox-cf485.firebaseio.com",
+    "project_id": "flutterchatbox-cf485",
+    "storage_bucket": "flutterchatbox-cf485.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:118733580734:android:f3a2864ca41d989e9e31ef",
+        "android_client_info": {
+          "package_name": "com.ismayil.ismayilov.flutter_chatbox"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "118733580734-mej1vtp7l3bt906bc3nvgtlc54eqkri0.apps.googleusercontent.com",
+          "client_type": 1,
+          "android_info": {
+            "package_name": "com.ismayil.ismayilov.flutter_chatbox",
+            "certificate_hash": "d9180d7a628c614afe41598ff05bbf57ea0f57b5"
+          }
+        },
+        {
+          "client_id": "118733580734-0t4t62agv9956jtfctu8rjoc3rkahgh8.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyCPlIsFh8n8cPJ0ex80PCtmSF9DWOXy1SQ"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": [
+            {
+              "client_id": "118733580734-0t4t62agv9956jtfctu8rjoc3rkahgh8.apps.googleusercontent.com",
+              "client_type": 3
+            }
+          ]
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}
