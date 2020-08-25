@@ -1,17 +1,16 @@
 import 'package:flutter/material.dart';
-import 'package:flutter_chatbox/models/user_model.dart';
-import 'package:flutter_chatbox/services/auth_base.dart';
+import 'models/user_model.dart';
+import 'services/auth_base.dart';
+
+import 'locator.dart';
+import 'services/firebase_auth_service.dart';
 
 class HomePage extends StatelessWidget {
+  final AuthBase _authService = locator<FirebaseAuthService>();
   final VoidCallback onSignOut;
-  final AuthBase authService;
   final AppUser user;
 
-  HomePage(
-      {Key key,
-      @required this.authService,
-      @required this.onSignOut,
-      @required this.user})
+  HomePage({Key key, @required this.onSignOut, @required this.user})
       : super(key: key);
 
   @override
@@ -33,7 +32,7 @@ class HomePage extends StatelessWidget {
   }
 
   Future<bool> _signOut() async {
-    bool res = await authService.signOut();
+    bool res = await _authService.signOut();
     onSignOut();
     return res;
   }

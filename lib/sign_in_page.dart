@@ -1,15 +1,15 @@
 import 'package:flutter/material.dart';
-import 'package:flutter_chatbox/common_widget/social_login_button.dart';
-import 'package:flutter_chatbox/models/user_model.dart';
-import 'package:flutter_chatbox/services/auth_base.dart';
+import 'common_widget/social_login_button.dart';
+import 'models/user_model.dart';
+import 'services/auth_base.dart';
+
+import 'locator.dart';
+import 'services/firebase_auth_service.dart';
 
 class SignInPage extends StatelessWidget {
   final Function(AppUser) onSignIn;
-  final AuthBase authService;
-
-  const SignInPage(
-      {Key key, @required this.authService, @required this.onSignIn})
-      : super(key: key);
+  final AuthBase _authService = locator<FirebaseAuthService>();
+  SignInPage({Key key, @required this.onSignIn}) : super(key: key);
 
   @override
   Widget build(BuildContext context) {
@@ -71,7 +71,7 @@ class SignInPage extends StatelessWidget {
   }
 
   void _guestMode() async {
-    AppUser user = await authService.signInAnonymous();
+    AppUser user = await _authService.signInAnonymous();
     onSignIn(user);
   }
 }

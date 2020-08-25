@@ -1,19 +1,18 @@
 import 'package:flutter/material.dart';
-import 'package:flutter_chatbox/models/user_model.dart';
-import 'package:flutter_chatbox/services/auth_base.dart';
+import 'models/user_model.dart';
+import 'services/auth_base.dart';
+import 'services/firebase_auth_service.dart';
 import 'home_page.dart';
+import 'locator.dart';
 import 'sign_in_page.dart';
 
 class LandingPage extends StatefulWidget {
-  final AuthBase authService;
-
-  const LandingPage({Key key, @required this.authService}) : super(key: key);
-
   @override
   _LandingPageState createState() => _LandingPageState();
 }
 
 class _LandingPageState extends State<LandingPage> {
+  AuthBase _authService = locator<FirebaseAuthService>();
   AppUser _user;
 
   @override
@@ -26,12 +25,10 @@ class _LandingPageState extends State<LandingPage> {
   Widget build(BuildContext context) {
     if (_user == null) {
       return SignInPage(
-        authService: widget.authService,
         onSignIn: updateUser,
       );
     } else {
       return HomePage(
-        authService: widget.authService,
         onSignOut: () => updateUser(null),
         user: _user,
       );
@@ -45,6 +42,6 @@ class _LandingPageState extends State<LandingPage> {
   }
 
   void _checkUser() async {
-    _user = await widget.authService.currentUser();
+    _user = await _authService.currentUser();
   }
 }
