@@ -16,8 +16,11 @@ class SignInPage extends StatelessWidget {
           children: [
             Text(
               "Sign In",
-              style: TextStyle(fontSize: 24),
+              style: TextStyle(fontSize: 24, fontWeight: FontWeight.bold),
               textAlign: TextAlign.center,
+            ),
+            SizedBox(
+              height: 10,
             ),
             RaisedButton(
               child: Text(
@@ -26,7 +29,7 @@ class SignInPage extends StatelessWidget {
               ),
               color: Colors.redAccent,
               shape: RoundedRectangleBorder(
-                  borderRadius: BorderRadius.circular(12.0)),
+                  borderRadius: BorderRadius.circular(10.0)),
               onPressed: () {},
             )
           ],
