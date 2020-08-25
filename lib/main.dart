@@ -16,6 +16,7 @@ class App extends StatelessWidget {
       title: "Flutter Chatbox",
       theme: ThemeData(primarySwatch: Colors.purple),
       home: LandingPage(),
+      debugShowCheckedModeBanner: false,
     );
   }
 }

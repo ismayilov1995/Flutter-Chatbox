@@ -3,6 +3,10 @@ import 'package:flutter/material.dart';
 import 'package:flutter_chatbox/common_widget/social_login_button.dart';
 
 class SignInPage extends StatelessWidget {
+  final Function(User) onSignIn;
+
+  const SignInPage({Key key, @required this.onSignIn}) : super(key: key);
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -64,6 +68,6 @@ class SignInPage extends StatelessWidget {
 
   void _guestMode() async {
     UserCredential result = await FirebaseAuth.instance.signInAnonymously();
-    debugPrint(result.user.uid);
+    onSignIn(result.user);
   }
 }
