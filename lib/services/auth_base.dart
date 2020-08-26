@@ -4,4 +4,5 @@ abstract class AuthBase {
   Future<AppUser> currentUser();
   Future<AppUser> signInAnonymous();
   Future<bool> signOut();
+  Future<AppUser> signInWithGoogle();
 }

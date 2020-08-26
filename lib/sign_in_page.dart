@@ -30,7 +30,7 @@ class SignInPage extends StatelessWidget {
               buttonColor: Colors.white,
               textColor: Colors.black,
               buttonIcon: Image.asset("images/google-logo.png"),
-              onPressed: () {},
+              onPressed: () => _loginWithGoogle(context),
             ),
             SocialLoginButton(
               buttonText: "Login with Facebook",
@@ -66,5 +66,10 @@ class SignInPage extends StatelessWidget {
   void _guestMode(BuildContext context) async {
     UserViewmodel _userVM = Provider.of<UserViewmodel>(context, listen: false);
     await _userVM.signInAnonymous();
+  }
+
+  void _loginWithGoogle(BuildContext context) async {
+    UserViewmodel _userVM = Provider.of<UserViewmodel>(context, listen: false);
+    await _userVM.signInWithGoogle();
   }
 }
