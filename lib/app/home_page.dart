@@ -7,26 +7,45 @@ import 'package:flutter_chatbox/models/user_model.dart';
 
 class HomePage extends StatefulWidget {
   final AppUser user;
+
   HomePage({Key key, @required this.user}) : super(key: key);
+
   @override
   _HomePageState createState() => _HomePageState();
 }
 
 class _HomePageState extends State<HomePage> {
   TabItem _currentTab = TabItem.AllUsers;
+  Map<TabItem, GlobalKey<NavigatorState>> navigatorKeys = {
+    TabItem.AllUsers: GlobalKey<NavigatorState>(),
+    TabItem.Profile: GlobalKey<NavigatorState>(),
+  };
+
   Map<TabItem, Widget> allPages() {
     return {TabItem.AllUsers: UsersPage(), TabItem.Profile: ProfilePage()};
   }
+
   @override
   Widget build(BuildContext context) {
-    return CustomBottomNavigation(
-      currentTab: _currentTab,
-      pageBuilder: allPages(),
-      onSelectedTab: (selectedTab) {
-        setState(() {
-          _currentTab = selectedTab;
-        });
-      },
+    return WillPopScope(
+      onWillPop: () async =>
+          !await navigatorKeys[_currentTab].currentState.maybePop(),
+      child: CustomBottomNavigation(
+        currentTab: _currentTab,
+        pageBuilder: allPages(),
+        navigatorKeys: navigatorKeys,
+        onSelectedTab: (selectedTab) {
+          if (selectedTab == _currentTab) {
+            navigatorKeys[selectedTab]
+                .currentState
+                .popUntil((route) => route.isFirst);
+          } else {
+            setState(() {
+              _currentTab = selectedTab;
+            });
+          }
+        },
+      ),
     );
   }
 }

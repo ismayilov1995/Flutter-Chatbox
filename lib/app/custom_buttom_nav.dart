@@ -4,11 +4,16 @@ import 'package:flutter_chatbox/app/tab_items.dart';
 
 class CustomBottomNavigation extends StatelessWidget {
   const CustomBottomNavigation(
-      {Key key, @required this.currentTab, @required this.onSelectedTab, @required this.pageBuilder})
+      {Key key,
+      @required this.currentTab,
+      @required this.onSelectedTab,
+      @required this.pageBuilder,
+      @required this.navigatorKeys})
       : super(key: key);
   final TabItem currentTab;
   final ValueChanged<TabItem> onSelectedTab;
   final Map<TabItem, Widget> pageBuilder;
+  final Map<TabItem, GlobalKey<NavigatorState>> navigatorKeys;
 
   @override
   Widget build(BuildContext context) {
@@ -23,6 +28,7 @@ class CustomBottomNavigation extends StatelessWidget {
       tabBuilder: (context, index) {
         final showItem = TabItem.values[index];
         return CupertinoTabView(
+          navigatorKey: navigatorKeys[showItem],
           builder: (context) {
             return pageBuilder[showItem];
           },
@@ -36,4 +42,5 @@ class CustomBottomNavigation extends StatelessWidget {
     return BottomNavigationBarItem(
         icon: Icon(createdTab.icon), title: Text(createdTab.title));
   }
+
 }
