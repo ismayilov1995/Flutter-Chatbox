@@ -3,12 +3,14 @@ import 'package:flutter_chatbox/models/user_model.dart';
 import 'package:flutter_chatbox/services/auth_base.dart';
 import 'package:flutter_chatbox/services/fake_auth_service.dart';
 import 'package:flutter_chatbox/services/firebase_auth_service.dart';
+import 'package:flutter_chatbox/services/firestore_db_service.dart';
 
 enum AppMode { DEBUG, RELEASE }
 
 class UserRepository implements AuthBase {
   FirebaseAuthService _firebaseAuthService = locator<FirebaseAuthService>();
   FakeAuthService _fakeAuthService = locator<FakeAuthService>();
+  FirestoreDbService _dbService = locator<FirestoreDbService>();
 
   AppMode appMode = AppMode.RELEASE;
 
@@ -69,9 +71,15 @@ class UserRepository implements AuthBase {
   @override
   Future<AppUser> createWithEmail(String email, String password) async {
     if (appMode == AppMode.DEBUG) {
-      return await _fakeAuthService.createWithEmail(email, password);
+      await _fakeAuthService.createWithEmail(email, password);
     } else {
-      return await _firebaseAuthService.createWithEmail(email, password);
+      AppUser _user =
+          await _firebaseAuthService.createWithEmail(email, password);
+      bool res = await _dbService.saveUser(_user);
+      if (res)
+        return _user;
+      else
+        return null;
     }
   }
 }
