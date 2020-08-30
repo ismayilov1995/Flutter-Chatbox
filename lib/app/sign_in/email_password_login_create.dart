@@ -1,4 +1,6 @@
+import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter/services.dart';
 import 'package:flutter_chatbox/common_widget/social_login_button.dart';
 import 'package:flutter_chatbox/viewmodel/user_model.dart';
 import 'package:provider/provider.dart';
@@ -42,7 +44,10 @@ class _EmailLoginPageState extends State<EmailLoginPage> {
           key: _formKey,
           child: Column(
             children: [
-              Text('Login', style: Theme.of(context).textTheme.headline1,),
+              Text(
+                'Login',
+                style: Theme.of(context).textTheme.headline1,
+              ),
               SizedBox(
                 height: 16,
               ),
@@ -125,9 +130,17 @@ class _EmailLoginPageState extends State<EmailLoginPage> {
     _formKey.currentState.validate();
     UserViewmodel _userVM = Provider.of<UserViewmodel>(context, listen: false);
     if (isLoginMode) {
-      await _userVM.signInWithEmail(_email, _password);
+      try {
+        await _userVM.signInWithEmail(_email, _password);
+      } on PlatformException catch (e) {
+        debugPrint("Error from widget" + e.message);
+      }
     } else {
-      await _userVM.createWithEmail(_email, _password);
+      try {
+        await _userVM.createWithEmail(_email, _password);
+      } on FirebaseAuthException catch (e) {
+        debugPrint("Error from widget" + e.code);
+      }
     }
   }
 }

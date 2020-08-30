@@ -75,7 +75,7 @@ class UserViewmodel with ChangeNotifier implements AuthBase {
       _user = await _userRepository.signInWithGoogle();
       return _user;
     } catch (e) {
-      print("Xeta: $e");
+      print("Xeta viewmodel: $e");
       state = ViewState.BUSY;
       return null;
     } finally {
@@ -90,7 +90,7 @@ class UserViewmodel with ChangeNotifier implements AuthBase {
       _user = await _userRepository.signInWithFacebook();
       return _user;
     } catch (e) {
-      print("Xeta: $e");
+      print("Xeta viewmodel: $e");
       state = ViewState.BUSY;
       return null;
     } finally {
@@ -100,37 +100,26 @@ class UserViewmodel with ChangeNotifier implements AuthBase {
 
   @override
   Future<AppUser> signInWithEmail(String email, String password) async {
-    try {
-      if (_checkPasswordEmail(email, password)) {
-        state = ViewState.BUSY;
-        _user = await _userRepository.signInWithEmail(email, password);
-        return _user;
-      }
-      return null;
-    } catch (e) {
-      print("Xeta: $e");
+    if (_checkPasswordEmail(email, password)) {
       state = ViewState.BUSY;
-      return null;
-    } finally {
-      state = ViewState.IDLE;
+      _user = await _userRepository.signInWithEmail(email, password);
+      return _user;
     }
+    return null;
   }
 
   @override
   Future<AppUser> createWithEmail(String email, String password) async {
-    try {
-      if (_checkPasswordEmail(email, password)) {
+    if (_checkPasswordEmail(email, password)) {
+      try {
         state = ViewState.BUSY;
         _user = await _userRepository.createWithEmail(email, password);
         return _user;
-      } else
-        return null;
-    } catch (e) {
-      print("Xeta: $e");
-      state = ViewState.BUSY;
+      } finally {
+        state = ViewState.IDLE;
+      }
+    } else {
       return null;
-    } finally {
-      state = ViewState.IDLE;
     }
   }
 

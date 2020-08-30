@@ -9,13 +9,8 @@ class FirebaseAuthService implements AuthBase {
 
   @override
   Future<AppUser> currentUser() {
-    try {
-      User user = _firebaseAuth.currentUser;
-      return Future.delayed(Duration.zero, () => _userFromFirebase(user));
-    } catch (e) {
-      print('XETA: $e');
-      return null;
-    }
+    User user = _firebaseAuth.currentUser;
+    return Future.delayed(Duration.zero, () => _userFromFirebase(user));
   }
 
   AppUser _userFromFirebase(User user) {
@@ -24,53 +19,37 @@ class FirebaseAuthService implements AuthBase {
 
   @override
   Future<AppUser> signInAnonymous() async {
-    try {
-      UserCredential result = await FirebaseAuth.instance.signInAnonymously();
-      return _userFromFirebase(result.user);
-    } catch (e) {
-      print('XETA: $e');
-      return null;
-    }
+    UserCredential result = await FirebaseAuth.instance.signInAnonymously();
+    return _userFromFirebase(result.user);
   }
 
   @override
   Future<bool> signOut() async {
-    try {
-      final GoogleSignIn _googleSignIn = GoogleSignIn();
-      final _facebookLogin = FacebookLogin();
+    final GoogleSignIn _googleSignIn = GoogleSignIn();
+    final _facebookLogin = FacebookLogin();
 
-      await _googleSignIn.signOut();
-      await _firebaseAuth.signOut();
-      await _facebookLogin.logOut();
-      return true;
-    } catch (e) {
-      print('XETA: $e');
-      return false;
-    }
+    await _googleSignIn.signOut();
+    await _firebaseAuth.signOut();
+    await _facebookLogin.logOut();
+    return true;
   }
 
   @override
   Future<AppUser> signInWithGoogle() async {
-    try {
-      final GoogleSignIn _googleSignIn = GoogleSignIn();
-      GoogleSignInAccount _googleUser = await _googleSignIn.signIn();
-      if (_googleUser != null) {
-        GoogleSignInAuthentication _googleAuth =
-            await _googleUser.authentication;
-        if (_googleAuth.idToken != null && _googleAuth.accessToken != null) {
-          UserCredential result = await _firebaseAuth.signInWithCredential(
-              GoogleAuthProvider.credential(
-                  idToken: _googleAuth.idToken,
-                  accessToken: _googleAuth.accessToken));
-          User _user = result.user;
-          return _userFromFirebase(_user);
-        }
+    final GoogleSignIn _googleSignIn = GoogleSignIn();
+    GoogleSignInAccount _googleUser = await _googleSignIn.signIn();
+    if (_googleUser != null) {
+      GoogleSignInAuthentication _googleAuth = await _googleUser.authentication;
+      if (_googleAuth.idToken != null && _googleAuth.accessToken != null) {
+        UserCredential result = await _firebaseAuth.signInWithCredential(
+            GoogleAuthProvider.credential(
+                idToken: _googleAuth.idToken,
+                accessToken: _googleAuth.accessToken));
+        User _user = result.user;
+        return _userFromFirebase(_user);
       }
-      return null;
-    } catch (e) {
-      print("Xeta fs: $e");
-      return null;
     }
+    return null;
   }
 
   @override
@@ -98,25 +77,15 @@ class FirebaseAuthService implements AuthBase {
 
   @override
   Future<AppUser> signInWithEmail(String email, String password) async {
-    try {
-      UserCredential result = await FirebaseAuth.instance
-          .signInWithEmailAndPassword(email: email, password: password);
-      return _userFromFirebase(result.user);
-    } catch (e) {
-      print('XETA: $e');
-      return null;
-    }
+    UserCredential result = await FirebaseAuth.instance
+        .signInWithEmailAndPassword(email: email, password: password);
+    return _userFromFirebase(result.user);
   }
 
   @override
   Future<AppUser> createWithEmail(String email, String password) async {
-    try {
-      UserCredential result = await FirebaseAuth.instance
-          .createUserWithEmailAndPassword(email: email, password: password);
-      return _userFromFirebase(result.user);
-    } catch (e) {
-      print('XETA: $e');
-      return null;
-    }
+    UserCredential result = await FirebaseAuth.instance
+        .createUserWithEmailAndPassword(email: email, password: password);
+    return _userFromFirebase(result.user);
   }
 }
