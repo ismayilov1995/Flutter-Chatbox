@@ -15,11 +15,11 @@
       },
       "oauth_client": [
         {
-          "client_id": "118733580734-mej1vtp7l3bt906bc3nvgtlc54eqkri0.apps.googleusercontent.com",
+          "client_id": "118733580734-4ur5laa841e8uhcb466u7ui20umuhbul.apps.googleusercontent.com",
           "client_type": 1,
           "android_info": {
             "package_name": "com.ismayil.ismayilov.flutter_chatbox",
-            "certificate_hash": "d9180d7a628c614afe41598ff05bbf57ea0f57b5"
+            "certificate_hash": "96afbfed25fe1cf235684451ee9613cb8981ba82"
           }
         },
         {
