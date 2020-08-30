@@ -58,8 +58,14 @@ class UserRepository implements AuthBase {
   }
 
   @override
-  Future<AppUser> signInWithEmail() {
+  Future<AppUser> signInWithEmail(String email, String password) {
     // TODO: implement signInWithEmail
+    throw UnimplementedError();
+  }
+
+  @override
+  Future<AppUser> createWithEmail(String email, String password) {
+    // TODO: implement createWithEmail
     throw UnimplementedError();
   }
 }
