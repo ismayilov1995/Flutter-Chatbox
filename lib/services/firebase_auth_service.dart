@@ -1,5 +1,5 @@
 import 'package:firebase_auth/firebase_auth.dart';
-import 'package:flutter_chatbox/models/user_model.dart';
+import 'package:flutter_chatbox/models/user.dart';
 import 'package:flutter_chatbox/services/auth_base.dart';
 import 'package:flutter_facebook_login/flutter_facebook_login.dart';
 import 'package:google_sign_in/google_sign_in.dart';

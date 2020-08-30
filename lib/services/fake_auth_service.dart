@@ -1,4 +1,4 @@
-import 'package:flutter_chatbox/models/user_model.dart';
+import 'package:flutter_chatbox/models/user.dart';
 import 'package:flutter_chatbox/services/auth_base.dart';
 
 class FakeAuthService implements AuthBase {

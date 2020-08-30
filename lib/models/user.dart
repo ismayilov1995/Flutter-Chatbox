@@ -1,3 +1,5 @@
+import 'dart:math';
+
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
 
@@ -16,7 +18,8 @@ class AppUser {
     return {
       'userID': userID,
       'email': email,
-      'username': username ?? '',
+      'username': username ??
+          email.substring(0, email.indexOf('@')) + createRandomNumb(),
       'profileUrl': profileUrl ?? '',
       'createdAt': createdAt ?? FieldValue.serverTimestamp(),
       'updatedAt': updatedAt ?? FieldValue.serverTimestamp(),
@@ -36,5 +39,10 @@ class AppUser {
   @override
   String toString() {
     return 'AppUser{userID: $userID, email: $email, username: $username, profileUrl: $profileUrl, createdAt: $createdAt, updatedAt: $updatedAt, level: $level}';
+  }
+
+  String createRandomNumb() {
+    int random = Random().nextInt(7090698);
+    return random.toString();
   }
 }

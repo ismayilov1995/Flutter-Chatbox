@@ -1,6 +1,6 @@
 import 'package:flutter/cupertino.dart';
 import 'package:flutter_chatbox/locator.dart';
-import 'package:flutter_chatbox/models/user_model.dart';
+import 'package:flutter_chatbox/models/user.dart';
 import 'package:flutter_chatbox/repository/user_repository.dart';
 import 'package:flutter_chatbox/services/auth_base.dart';
 

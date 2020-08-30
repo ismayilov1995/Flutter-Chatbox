@@ -1,5 +1,5 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
-import 'package:flutter_chatbox/models/user_model.dart';
+import 'package:flutter_chatbox/models/user.dart';
 import 'package:flutter_chatbox/services/database_base.dart';
 
 class FirestoreDbService implements DbBase {

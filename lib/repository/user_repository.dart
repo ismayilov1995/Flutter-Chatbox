@@ -1,5 +1,5 @@
 import 'package:flutter_chatbox/locator.dart';
-import 'package:flutter_chatbox/models/user_model.dart';
+import 'package:flutter_chatbox/models/user.dart';
 import 'package:flutter_chatbox/services/auth_base.dart';
 import 'package:flutter_chatbox/services/fake_auth_service.dart';
 import 'package:flutter_chatbox/services/firebase_auth_service.dart';

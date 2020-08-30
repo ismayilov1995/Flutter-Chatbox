@@ -1,4 +1,4 @@
-import 'package:flutter_chatbox/models/user_model.dart';
+import 'package:flutter_chatbox/models/user.dart';
 
 abstract class AuthBase {
   Future<AppUser> currentUser();

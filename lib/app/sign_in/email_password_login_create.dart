@@ -42,6 +42,10 @@ class _EmailLoginPageState extends State<EmailLoginPage> {
           key: _formKey,
           child: Column(
             children: [
+              Text('Login', style: Theme.of(context).textTheme.headline1,),
+              SizedBox(
+                height: 16,
+              ),
               TextFormField(
                 initialValue: "emre@emre.com",
                 keyboardType: TextInputType.emailAddress,
