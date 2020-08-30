@@ -93,19 +93,30 @@ class FirebaseAuthService implements AuthBase {
         print("Xeta: " + _faceRes.errorMessage);
         break;
     }
-
     return null;
   }
 
   @override
-  Future<AppUser> signInWithEmail(String email, String password) {
-    // TODO: implement signInWithEmail
-    throw UnimplementedError();
+  Future<AppUser> signInWithEmail(String email, String password) async {
+    try {
+      UserCredential result = await FirebaseAuth.instance
+          .signInWithEmailAndPassword(email: email, password: password);
+      return _userFromFirebase(result.user);
+    } catch (e) {
+      print('XETA: $e');
+      return null;
+    }
   }
 
   @override
-  Future<AppUser> createWithEmail(String email, String password) {
-    // TODO: implement createWithEmail
-    throw UnimplementedError();
+  Future<AppUser> createWithEmail(String email, String password) async {
+    try {
+      UserCredential result = await FirebaseAuth.instance
+          .createUserWithEmailAndPassword(email: email, password: password);
+      return _userFromFirebase(result.user);
+    } catch (e) {
+      print('XETA: $e');
+      return null;
+    }
   }
 }

@@ -98,13 +98,32 @@ class UserViewmodel with ChangeNotifier implements AuthBase {
   }
 
   @override
-  Future<AppUser> signInWithEmail(String email, String password) {
-    throw UnimplementedError();
+  Future<AppUser> signInWithEmail(String email, String password) async {
+    try {
+      state = ViewState.BUSY;
+      _user = await _userRepository.signInWithEmail(email, password);
+      return _user;
+    } catch (e) {
+      print("Xeta: $e");
+      state = ViewState.BUSY;
+      return null;
+    } finally {
+      state = ViewState.IDLE;
+    }
   }
 
   @override
-  Future<AppUser> createWithEmail(String email, String password) {
-    // TODO: implement createWithEmail
-    throw UnimplementedError();
+  Future<AppUser> createWithEmail(String email, String password) async {
+    try {
+      state = ViewState.BUSY;
+      _user = await _userRepository.createWithEmail(email, password);
+      return _user;
+    } catch (e) {
+      print("Xeta: $e");
+      state = ViewState.BUSY;
+      return null;
+    } finally {
+      state = ViewState.IDLE;
+    }
   }
 }

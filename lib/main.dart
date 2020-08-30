@@ -15,12 +15,14 @@ void main() async {
 class App extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
-    return MaterialApp(
-      title: "Flutter Chatbox",
-      theme: ThemeData(primarySwatch: Colors.purple),
-      home: ChangeNotifierProvider(
-          create: (context) => UserViewmodel(), child: LandingPage()),
-      debugShowCheckedModeBanner: false,
+    return ChangeNotifierProvider(
+      create: (context) => UserViewmodel(),
+      child: MaterialApp(
+        title: "Flutter Chatbox",
+        theme: ThemeData(primarySwatch: Colors.purple),
+        home: LandingPage(),
+        debugShowCheckedModeBanner: false,
+      ),
     );
   }
 }
