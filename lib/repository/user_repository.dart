@@ -74,7 +74,9 @@ class UserRepository implements AuthBase {
     if (appMode == AppMode.DEBUG) {
       return await _fakeAuthService.signInWithEmail(email, password);
     } else {
-      return await _firebaseAuthService.signInWithEmail(email, password);
+      AppUser _user =
+          await _firebaseAuthService.signInWithEmail(email, password);
+      return _dbService.getUser(_user.userID);
     }
   }
 
@@ -87,7 +89,7 @@ class UserRepository implements AuthBase {
           await _firebaseAuthService.createWithEmail(email, password);
       bool res = await _dbService.saveUser(_user);
       if (res)
-        return _user;
+        return await _dbService.getUser(_user.userID);
       else
         return null;
     }

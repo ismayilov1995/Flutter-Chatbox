@@ -47,7 +47,7 @@ class _EmailLoginPageState extends State<EmailLoginPage> {
                 height: 16,
               ),
               TextFormField(
-                initialValue: "emre@emre.com",
+                initialValue: "ismayil@emre.com",
                 keyboardType: TextInputType.emailAddress,
                 decoration: InputDecoration(
                     prefixIcon: Icon(Icons.mail),

@@ -8,9 +8,13 @@ class FirestoreDbService implements DbBase {
   @override
   Future<bool> saveUser(AppUser user) async {
     await _firestore.collection("users").doc(user.userID).set(user.toMap());
-    // DocumentSnapshot _fetchUser = await FirebaseFirestore.instance.doc("users/${user.userID}").get();
-    // AppUser _pox = AppUser.mapFrom(_fetchUser.data());
-    // print(_pox.toString());
     return true;
+  }
+
+  @override
+  Future<AppUser> getUser(String userId) async {
+    DocumentSnapshot _userSnapshot =
+        await _firestore.collection("users").doc(userId).get();
+    return AppUser.mapFrom(_userSnapshot.data());
   }
 }
