@@ -81,4 +81,19 @@ class UserViewmodel with ChangeNotifier implements AuthBase {
       state = ViewState.IDLE;
     }
   }
+
+  @override
+  Future<AppUser> signInWithFacebook() async {
+    try {
+      state = ViewState.BUSY;
+      _user = await _userRepository.signInWithFacebook();
+      return _user;
+    } catch (e) {
+      print("Xeta: $e");
+      state = ViewState.BUSY;
+      return null;
+    } finally {
+      state = ViewState.IDLE;
+    }
+  }
 }

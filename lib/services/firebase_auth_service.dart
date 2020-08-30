@@ -1,6 +1,7 @@
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter_chatbox/models/user_model.dart';
 import 'package:flutter_chatbox/services/auth_base.dart';
+import 'package:flutter_facebook_login/flutter_facebook_login.dart';
 import 'package:google_sign_in/google_sign_in.dart';
 
 class FirebaseAuthService implements AuthBase {
@@ -36,8 +37,11 @@ class FirebaseAuthService implements AuthBase {
   Future<bool> signOut() async {
     try {
       final GoogleSignIn _googleSignIn = GoogleSignIn();
+      final _facebookLogin = FacebookLogin();
+
       await _googleSignIn.signOut();
       await _firebaseAuth.signOut();
+      await _facebookLogin.logOut();
       return true;
     } catch (e) {
       print('XETA: $e');
@@ -67,5 +71,29 @@ class FirebaseAuthService implements AuthBase {
       print("Xeta fs: $e");
       return null;
     }
+  }
+
+  @override
+  Future<AppUser> signInWithFacebook() async {
+    final _facebookLogin = FacebookLogin();
+    FacebookLoginResult _faceRes =
+        await _facebookLogin.logIn(['public_profile', 'email']);
+    switch (_faceRes.status) {
+      case FacebookLoginStatus.loggedIn:
+        print("Logged in");
+        UserCredential _firebaseRes = await _firebaseAuth.signInWithCredential(
+            FacebookAuthProvider.credential(_faceRes.accessToken.token));
+        User _user = _firebaseRes.user;
+        return _userFromFirebase(_user);
+        break;
+      case FacebookLoginStatus.cancelledByUser:
+        print("Canceled by user");
+        break;
+      case FacebookLoginStatus.error:
+        print("Xeta: " + _faceRes.errorMessage);
+        break;
+    }
+
+    return null;
   }
 }
