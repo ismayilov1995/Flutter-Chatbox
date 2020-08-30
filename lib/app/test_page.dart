@@ -1,26 +1,26 @@
 import 'package:flutter/material.dart';
-import 'package:flutter_chatbox/app/test_page.dart';
+import 'package:flutter_chatbox/app/home_page.dart';
+import 'package:flutter_chatbox/app/profile.dart';
 
-class UsersPage extends StatelessWidget {
+class TestPage extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-        title: Text("Users"),
+        title: Text('data'),
         actions: [
           IconButton(
             icon: Icon(Icons.account_balance_wallet),
             onPressed: () {
               Navigator.of(context)
-                  .push(MaterialPageRoute(builder: (context) => TestPage()));
+                  .push(MaterialPageRoute(builder: (context) => ProfilePage()));
             },
           )
         ],
       ),
-      body: Center(
-        child: Container(
-          child: Text("Dil vuran istifadeciler"),
-        ),
+      body: Container(
+        color: Colors.amber,
+        child: Text("asaasasa"),
       ),
     );
   }

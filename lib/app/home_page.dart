@@ -3,9 +3,7 @@ import 'package:flutter_chatbox/app/custom_buttom_nav.dart';
 import 'package:flutter_chatbox/app/profile.dart';
 import 'package:flutter_chatbox/app/tab_items.dart';
 import 'package:flutter_chatbox/app/users.dart';
-import 'package:flutter_chatbox/viewmodel/user_model.dart';
-import 'package:provider/provider.dart';
-import '../models/user_model.dart';
+import 'package:flutter_chatbox/models/user_model.dart';
 
 class HomePage extends StatefulWidget {
   final AppUser user;
