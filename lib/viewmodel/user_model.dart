@@ -96,4 +96,9 @@ class UserViewmodel with ChangeNotifier implements AuthBase {
       state = ViewState.IDLE;
     }
   }
+
+  @override
+  Future<AppUser> signInWithEmail() {
+    throw UnimplementedError();
+  }
 }

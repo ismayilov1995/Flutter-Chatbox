@@ -56,4 +56,10 @@ class UserRepository implements AuthBase {
       return await _firebaseAuthService.signInWithFacebook();
     }
   }
+
+  @override
+  Future<AppUser> signInWithEmail() {
+    // TODO: implement signInWithEmail
+    throw UnimplementedError();
+  }
 }

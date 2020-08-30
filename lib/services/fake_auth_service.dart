@@ -31,4 +31,10 @@ class FakeAuthService implements AuthBase {
     return await Future.delayed(
         Duration(seconds: 2), () => AppUser(userID: userID + "with facebook"));
   }
+
+  @override
+  Future<AppUser> signInWithEmail() {
+    // TODO: implement signInWithEmail
+    throw UnimplementedError();
+  }
 }

@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_chatbox/viewmodel/user_model.dart';
 import 'package:provider/provider.dart';
-import 'models/user_model.dart';
+import '../models/user_model.dart';
 
 class HomePage extends StatelessWidget {
   final AppUser user;

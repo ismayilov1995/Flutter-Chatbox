@@ -1,7 +1,9 @@
+import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_chatbox/app/sign_in/email_password_login_create.dart';
 import 'package:flutter_chatbox/viewmodel/user_model.dart';
 import 'package:provider/provider.dart';
-import 'common_widget/social_login_button.dart';
+import '../../common_widget/social_login_button.dart';
 
 class SignInPage extends StatelessWidget {
   @override
@@ -45,7 +47,7 @@ class SignInPage extends StatelessWidget {
                 color: Colors.white,
                 size: 32,
               ),
-              onPressed: () {},
+              onPressed: () => _loginWithEmail(context),
             ),
             SocialLoginButton(
               buttonText: "Guest mode",
@@ -76,5 +78,10 @@ class SignInPage extends StatelessWidget {
   void _loginWithFacebook(BuildContext context) async {
     UserViewmodel _userVM = Provider.of<UserViewmodel>(context, listen: false);
     await _userVM.signInWithFacebook();
+  }
+
+  void _loginWithEmail(BuildContext context) {
+    Navigator.of(context).push(MaterialPageRoute(
+        fullscreenDialog: true, builder: (context) => EmailLoginPage()));
   }
 }
