@@ -6,13 +6,13 @@ class FakeAuthService implements AuthBase {
 
   @override
   Future<AppUser> currentUser() async {
-    return await Future.value(AppUser(userID: userID));
+    return await Future.value(AppUser(userID: userID, email: 'fake@fake.com'));
   }
 
   @override
   Future<AppUser> signInAnonymous() async {
     return await Future.delayed(
-        Duration(seconds: 2), () => AppUser(userID: userID));
+        Duration(seconds: 2), () => AppUser(userID: userID, email: 'fake@fake.com'));
   }
 
   @override
@@ -23,13 +23,13 @@ class FakeAuthService implements AuthBase {
   @override
   Future<AppUser> signInWithGoogle() async {
     return await Future.delayed(
-        Duration(seconds: 2), () => AppUser(userID: userID + "with google"));
+        Duration(seconds: 2), () => AppUser(userID: userID + "with google", email: 'fake@fake.com'));
   }
 
   @override
   Future<AppUser> signInWithFacebook() async {
     return await Future.delayed(
-        Duration(seconds: 2), () => AppUser(userID: userID + "with facebook"));
+        Duration(seconds: 2), () => AppUser(userID: userID + "with facebook", email: 'fake@fake.com'));
   }
 
   @override
@@ -38,12 +38,12 @@ class FakeAuthService implements AuthBase {
     final String _fakePass = "7090698";
     if (email != _fakeEmail && password != _fakePass) return null;
     return await Future.delayed(
-        Duration(seconds: 2), () => AppUser(userID: userID + "logined" + _fakeEmail));
+        Duration(seconds: 2), () => AppUser(userID: userID + "logined" + _fakeEmail, email: 'fake@fake.com'));
   }
 
   @override
   Future<AppUser> createWithEmail(String email, String password) async {
     return await Future.delayed(
-        Duration(seconds: 2), () => AppUser(userID: userID + "registered" + email));
+        Duration(seconds: 2), () => AppUser(userID: userID + "registered" + email, email: 'fake@fake.com'));
   }
 }

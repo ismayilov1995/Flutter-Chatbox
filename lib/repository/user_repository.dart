@@ -71,7 +71,7 @@ class UserRepository implements AuthBase {
   @override
   Future<AppUser> createWithEmail(String email, String password) async {
     if (appMode == AppMode.DEBUG) {
-      await _fakeAuthService.createWithEmail(email, password);
+      return await _fakeAuthService.createWithEmail(email, password);
     } else {
       AppUser _user =
           await _firebaseAuthService.createWithEmail(email, password);
