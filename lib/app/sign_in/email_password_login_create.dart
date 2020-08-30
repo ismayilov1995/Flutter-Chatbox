@@ -29,11 +29,12 @@ class _EmailLoginPageState extends State<EmailLoginPage> {
           title: Text(isLoginMode ? 'Login' : 'Register'),
         ),
         body: _userVM.state == ViewState.IDLE
-            ? buildSingleChildScrollView(context)
+            ? buildSingleChildScrollView(context, _userVM)
             : Center(child: CircularProgressIndicator()));
   }
 
-  SingleChildScrollView buildSingleChildScrollView(BuildContext context) {
+  SingleChildScrollView buildSingleChildScrollView(
+      BuildContext context, UserViewmodel userVM) {
     return SingleChildScrollView(
       child: Container(
         margin: EdgeInsets.fromLTRB(12, 16, 12, 0),
@@ -50,7 +51,9 @@ class _EmailLoginPageState extends State<EmailLoginPage> {
                     labelText: "Email",
                     border: OutlineInputBorder()),
                 validator: (val) {
-                  return val.contains('@') ? null : 'Input valid email format';
+                  return userVM.emailErrorMsg == null
+                      ? null
+                      : userVM.emailErrorMsg;
                 },
                 onSaved: (val) => _email = val,
               ),
@@ -66,7 +69,9 @@ class _EmailLoginPageState extends State<EmailLoginPage> {
                     labelText: "Password",
                     border: OutlineInputBorder()),
                 validator: (val) {
-                  return val.length > 5 ? null : 'Minimum length 6';
+                  return userVM.passwordErrorMsg == null
+                      ? null
+                      : userVM.passwordErrorMsg;
                 },
                 onSaved: (val) => _password = val,
               ),
@@ -112,15 +117,13 @@ class _EmailLoginPageState extends State<EmailLoginPage> {
   }
 
   void _onSubmit() async {
-    if (_formKey.currentState.validate()) {
-      _formKey.currentState.save();
-      UserViewmodel _userVM =
-          Provider.of<UserViewmodel>(context, listen: false);
-      if (isLoginMode) {
-        await _userVM.signInWithEmail(_email, _password);
-      } else {
-        await _userVM.createWithEmail(_email, _password);
-      }
+    _formKey.currentState.save();
+    _formKey.currentState.validate();
+    UserViewmodel _userVM = Provider.of<UserViewmodel>(context, listen: false);
+    if (isLoginMode) {
+      await _userVM.signInWithEmail(_email, _password);
+    } else {
+      await _userVM.createWithEmail(_email, _password);
     }
   }
 }

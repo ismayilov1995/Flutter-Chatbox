@@ -9,6 +9,7 @@ enum ViewState { IDLE, BUSY }
 class UserViewmodel with ChangeNotifier implements AuthBase {
   ViewState _state = ViewState.IDLE;
   UserRepository _userRepository = locator<UserRepository>();
+  String emailErrorMsg, passwordErrorMsg;
   AppUser _user;
 
   ViewState get state => _state;
@@ -100,9 +101,12 @@ class UserViewmodel with ChangeNotifier implements AuthBase {
   @override
   Future<AppUser> signInWithEmail(String email, String password) async {
     try {
-      state = ViewState.BUSY;
-      _user = await _userRepository.signInWithEmail(email, password);
-      return _user;
+      if (_checkPasswordEmail(email, password)) {
+        state = ViewState.BUSY;
+        _user = await _userRepository.signInWithEmail(email, password);
+        return _user;
+      }
+      return null;
     } catch (e) {
       print("Xeta: $e");
       state = ViewState.BUSY;
@@ -115,9 +119,12 @@ class UserViewmodel with ChangeNotifier implements AuthBase {
   @override
   Future<AppUser> createWithEmail(String email, String password) async {
     try {
-      state = ViewState.BUSY;
-      _user = await _userRepository.createWithEmail(email, password);
-      return _user;
+      if (_checkPasswordEmail(email, password)) {
+        state = ViewState.BUSY;
+        _user = await _userRepository.createWithEmail(email, password);
+        return _user;
+      } else
+        return null;
     } catch (e) {
       print("Xeta: $e");
       state = ViewState.BUSY;
@@ -125,5 +132,20 @@ class UserViewmodel with ChangeNotifier implements AuthBase {
     } finally {
       state = ViewState.IDLE;
     }
+  }
+
+  bool _checkPasswordEmail(String email, String password) {
+    bool result = true;
+    if (password.length < 6) {
+      passwordErrorMsg = "Minimum 6 characters";
+      result = false;
+    } else
+      passwordErrorMsg = null;
+    if (!email.contains('@')) {
+      emailErrorMsg = "Invalid email format";
+      result = false;
+    } else
+      emailErrorMsg = null;
+    return result;
   }
 }
