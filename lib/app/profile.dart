@@ -11,13 +11,14 @@ class ProfilePage extends StatelessWidget {
         actions: [
           IconButton(
             icon: Icon(Icons.exit_to_app),
-            onPressed:() => _signOut(context),
+            onPressed: () => _signOut(context),
           )
         ],
       ),
       body: Center(
         child: Container(
-          child: Text("Dil vuran istifadecinin profili"),
+          child: Text("Dil vuran istifadecinin profili " +
+              Provider.of<UserViewmodel>(context).user.username),
         ),
       ),
     );
