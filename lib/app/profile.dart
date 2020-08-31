@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_chatbox/common_widget/responsive_alertdialog.dart';
 import 'package:flutter_chatbox/viewmodel/user_model.dart';
 import 'package:provider/provider.dart';
 
@@ -11,7 +12,7 @@ class ProfilePage extends StatelessWidget {
         actions: [
           IconButton(
             icon: Icon(Icons.exit_to_app),
-            onPressed: () => _signOut(context),
+            onPressed: () => _confirmSignOut(context),
           )
         ],
       ),
@@ -27,5 +28,17 @@ class ProfilePage extends StatelessWidget {
   void _signOut(BuildContext context) async {
     final _userVM = Provider.of<UserViewmodel>(context, listen: false);
     await _userVM.signOut();
+  }
+
+  Future<bool> _confirmSignOut(BuildContext context) async {
+    final allow = await ResponsiveAlertDialog(
+      title: "Sure?",
+      content: "Are you sure logout application?",
+      allowBtn: "I'm sure",
+      cancelBtn: "Cancel",
+    ).show(context);
+    if (allow) {
+      _signOut(context);
+    }
   }
 }

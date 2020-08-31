@@ -135,21 +135,22 @@ class _EmailLoginPageState extends State<EmailLoginPage> {
       try {
         await _userVM.signInWithEmail(_email, _password);
       } on FirebaseAuthException catch (e) {
-        debugPrint("Error from widget" + AppErrors.show(e.code));
+        _showAlertDialog(e.code);
       }
     } else {
       try {
         await _userVM.createWithEmail(_email, _password);
       } on FirebaseAuthException catch (e) {
-        debugPrint("Error from widget" + AppErrors.show(e.code));
-        showDialog(
-            context: context,
-            builder: (context) => ResponsiveAlertDialog(
-                  title: "Auth Error",
-                  content: AppErrors.show(e.code),
-                  allowBtn: "Understand",
-                ));
+        _showAlertDialog(e.code);
       }
     }
+  }
+
+  _showAlertDialog(String message) {
+    ResponsiveAlertDialog(
+      title: "Auth Error",
+      content: AppErrors.show(message),
+      allowBtn: "Understand",
+    ).show(context);
   }
 }

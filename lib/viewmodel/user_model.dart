@@ -100,26 +100,30 @@ class UserViewmodel with ChangeNotifier implements AuthBase {
 
   @override
   Future<AppUser> signInWithEmail(String email, String password) async {
-    if (_checkPasswordEmail(email, password)) {
-      state = ViewState.BUSY;
-      _user = await _userRepository.signInWithEmail(email, password);
-      return _user;
+    try {
+      if (_checkPasswordEmail(email, password)) {
+        state = ViewState.BUSY;
+        _user = await _userRepository.signInWithEmail(email, password);
+        return _user;
+      }
+      return null;
+    } finally {
+      state = ViewState.IDLE;
     }
-    return null;
   }
 
   @override
   Future<AppUser> createWithEmail(String email, String password) async {
-    if (_checkPasswordEmail(email, password)) {
-      try {
+    try {
+      if (_checkPasswordEmail(email, password)) {
         state = ViewState.BUSY;
         _user = await _userRepository.createWithEmail(email, password);
         return _user;
-      } finally {
-        state = ViewState.IDLE;
+      } else {
+        return null;
       }
-    } else {
-      return null;
+    } finally {
+      state = ViewState.IDLE;
     }
   }
 
