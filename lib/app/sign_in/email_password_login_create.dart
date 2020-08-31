@@ -7,14 +7,17 @@ import 'package:flutter_chatbox/common_widget/social_login_button.dart';
 import 'package:flutter_chatbox/viewmodel/user_model.dart';
 import 'package:provider/provider.dart';
 
+enum FormType { Login, Register }
+
 class EmailLoginPage extends StatefulWidget {
   @override
   _EmailLoginPageState createState() => _EmailLoginPageState();
 }
 
 class _EmailLoginPageState extends State<EmailLoginPage> {
-  bool isLoginMode = true;
+  String _buttonText, _linkText;
   final _formKey = GlobalKey<FormState>();
+  FormType _formType = FormType.Login;
   String _email, _password;
   TextEditingController _passCtrl = TextEditingController();
 
@@ -22,7 +25,9 @@ class _EmailLoginPageState extends State<EmailLoginPage> {
   Widget build(BuildContext context) {
     final _userVM = Provider.of<UserViewmodel>(context);
     _passCtrl.text = '7090698';
-
+    _buttonText = _formType == FormType.Login ? 'Login' : 'SignUp';
+    _linkText =
+        _formType == FormType.Login ? "Create Account" : 'Login exists account';
     if (_userVM.user != null) {
       Future.delayed(
           Duration(milliseconds: 20), () => Navigator.of(context).pop());
@@ -30,7 +35,7 @@ class _EmailLoginPageState extends State<EmailLoginPage> {
 
     return Scaffold(
         appBar: AppBar(
-          title: Text(isLoginMode ? 'Login' : 'Register'),
+          title: Text(_buttonText),
         ),
         body: _userVM.state == ViewState.IDLE
             ? buildSingleChildScrollView(context, _userVM)
@@ -47,7 +52,7 @@ class _EmailLoginPageState extends State<EmailLoginPage> {
           child: Column(
             children: [
               Text(
-                'Login',
+                _buttonText,
                 style: Theme.of(context).textTheme.headline1,
               ),
               SizedBox(
@@ -89,7 +94,7 @@ class _EmailLoginPageState extends State<EmailLoginPage> {
               SizedBox(
                 height: 16,
               ),
-              if (!isLoginMode) ...[
+              if (_formType == FormType.Register) ...[
                 TextFormField(
                   obscureText: true,
                   decoration: InputDecoration(
@@ -109,16 +114,19 @@ class _EmailLoginPageState extends State<EmailLoginPage> {
               ],
               SocialLoginButton(
                 radius: 4.0,
-                buttonText: isLoginMode ? 'Login' : 'Create Account',
+                buttonText: _buttonText,
                 buttonColor: Theme.of(context).primaryColor,
                 onPressed: () => _onSubmit(),
               ),
               FlatButton(
                 child: Text(
-                  isLoginMode ? "Create Account" : 'Login exists account',
+                  _linkText,
                   style: TextStyle(color: Theme.of(context).primaryColor),
                 ),
-                onPressed: () => setState(() => isLoginMode = !isLoginMode),
+                onPressed: () => setState(() => _formType =
+                    _formType == FormType.Login
+                        ? FormType.Register
+                        : FormType.Login),
               )
             ],
           ),
@@ -131,7 +139,7 @@ class _EmailLoginPageState extends State<EmailLoginPage> {
     _formKey.currentState.save();
     _formKey.currentState.validate();
     UserViewmodel _userVM = Provider.of<UserViewmodel>(context, listen: false);
-    if (isLoginMode) {
+    if (_formType == FormType.Login) {
       try {
         await _userVM.signInWithEmail(_email, _password);
       } on FirebaseAuthException catch (e) {
