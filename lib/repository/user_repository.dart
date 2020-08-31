@@ -95,4 +95,12 @@ class UserRepository implements AuthBase {
         return null;
     }
   }
+
+  Future<bool> updateUsername(String userID, String username) async {
+    if (appMode == AppMode.DEBUG) {
+      return await _fakeAuthService.updateUsername(userID, username);
+    } else {
+      return await _dbService.updateUsername(userID, username);
+    }
+  }
 }

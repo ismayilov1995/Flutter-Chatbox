@@ -13,6 +13,7 @@ class UserViewmodel with ChangeNotifier implements AuthBase {
   AppUser _user;
 
   ViewState get state => _state;
+
   AppUser get user => _user;
 
   set state(ViewState value) {
@@ -121,5 +122,11 @@ class UserViewmodel with ChangeNotifier implements AuthBase {
     } else
       emailErrorMsg = null;
     return result;
+  }
+
+  Future<bool> updateUserName(String userID, String username) async {
+    bool res = await _userRepository.updateUsername(userID, username);
+    if (res) user.username = username;
+    return res;
   }
 }

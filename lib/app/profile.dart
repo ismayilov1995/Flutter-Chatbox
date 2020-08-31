@@ -114,14 +114,21 @@ class _ProfilePageState extends State<ProfilePage> {
     }
   }
 
-  void _updateUsername(BuildContext context, UserViewmodel _userModel) {
+  void _updateUsername(BuildContext context, UserViewmodel _userModel) async {
     if (_userModel.user.username != _usernameCtrl.text) {
-      // _userModel.updateUserName(_usernameCtrl.text);
-      print('object');
+      if (await _userModel.updateUserName(
+          _userModel.user.userID, _usernameCtrl.text)) {
+        _userModel.user.username = _usernameCtrl.text;
+      } else {
+        ResponsiveAlertDialog(
+          title: "Warning",
+          content: "Username already in use, try with difference",
+          allowBtn: "Ok",
+        ).show(context);
+      }
     } else {
-      print('object2');
       ResponsiveAlertDialog(
-        title: "Warrning",
+        title: "Warning",
         content: "You not change anything",
         allowBtn: "Ok",
       ).show(context);
