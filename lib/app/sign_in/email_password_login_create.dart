@@ -2,6 +2,7 @@ import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter_chatbox/app/error_handler.dart';
+import 'package:flutter_chatbox/common_widget/responsive_alertdialog.dart';
 import 'package:flutter_chatbox/common_widget/social_login_button.dart';
 import 'package:flutter_chatbox/viewmodel/user_model.dart';
 import 'package:provider/provider.dart';
@@ -143,15 +144,10 @@ class _EmailLoginPageState extends State<EmailLoginPage> {
         debugPrint("Error from widget" + AppErrors.show(e.code));
         showDialog(
             context: context,
-            builder: (context) => AlertDialog(
-                  title: Text("Auth register error"),
-                  content: Text(AppErrors.show(e.code)),
-                  actions: [
-                    FlatButton(
-                      child: Text("Ok"),
-                      onPressed: () => Navigator.pop(context),
-                    )
-                  ],
+            builder: (context) => ResponsiveAlertDialog(
+                  title: "Auth Error",
+                  content: AppErrors.show(e.code),
+                  allowBtn: "Understand",
                 ));
       }
     }
