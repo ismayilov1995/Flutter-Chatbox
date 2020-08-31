@@ -1,6 +1,7 @@
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
+import 'package:flutter_chatbox/app/error_handler.dart';
 import 'package:flutter_chatbox/common_widget/social_login_button.dart';
 import 'package:flutter_chatbox/viewmodel/user_model.dart';
 import 'package:provider/provider.dart';
@@ -132,14 +133,26 @@ class _EmailLoginPageState extends State<EmailLoginPage> {
     if (isLoginMode) {
       try {
         await _userVM.signInWithEmail(_email, _password);
-      } on PlatformException catch (e) {
-        debugPrint("Error from widget" + e.message);
+      } on FirebaseAuthException catch (e) {
+        debugPrint("Error from widget" + AppErrors.show(e.code));
       }
     } else {
       try {
         await _userVM.createWithEmail(_email, _password);
       } on FirebaseAuthException catch (e) {
-        debugPrint("Error from widget" + e.code);
+        debugPrint("Error from widget" + AppErrors.show(e.code));
+        showDialog(
+            context: context,
+            builder: (context) => AlertDialog(
+                  title: Text("Auth register error"),
+                  content: Text(AppErrors.show(e.code)),
+                  actions: [
+                    FlatButton(
+                      child: Text("Ok"),
+                      onPressed: () => Navigator.pop(context),
+                    )
+                  ],
+                ));
       }
     }
   }
