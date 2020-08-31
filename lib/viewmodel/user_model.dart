@@ -13,7 +13,6 @@ class UserViewmodel with ChangeNotifier implements AuthBase {
   AppUser _user;
 
   ViewState get state => _state;
-
   AppUser get user => _user;
 
   set state(ViewState value) {
@@ -31,9 +30,6 @@ class UserViewmodel with ChangeNotifier implements AuthBase {
       state = ViewState.BUSY;
       _user = await _userRepository.currentUser();
       return _user;
-    } catch (e) {
-      print("Xeta: $e");
-      return null;
     } finally {
       state = ViewState.IDLE;
     }
@@ -45,10 +41,6 @@ class UserViewmodel with ChangeNotifier implements AuthBase {
       state = ViewState.BUSY;
       _user = await _userRepository.signInAnonymous();
       return _user;
-    } catch (e) {
-      print("Xeta: $e");
-      state = ViewState.BUSY;
-      return null;
     } finally {
       state = ViewState.IDLE;
     }
@@ -60,9 +52,6 @@ class UserViewmodel with ChangeNotifier implements AuthBase {
       state = ViewState.BUSY;
       _user = null;
       return await _userRepository.signOut();
-    } catch (e) {
-      print("Xeta: $e");
-      return null;
     } finally {
       state = ViewState.IDLE;
     }
@@ -74,10 +63,6 @@ class UserViewmodel with ChangeNotifier implements AuthBase {
       state = ViewState.BUSY;
       _user = await _userRepository.signInWithGoogle();
       return _user;
-    } catch (e) {
-      print("Xeta viewmodel: $e");
-      state = ViewState.BUSY;
-      return null;
     } finally {
       state = ViewState.IDLE;
     }
@@ -89,10 +74,6 @@ class UserViewmodel with ChangeNotifier implements AuthBase {
       state = ViewState.BUSY;
       _user = await _userRepository.signInWithFacebook();
       return _user;
-    } catch (e) {
-      print("Xeta viewmodel: $e");
-      state = ViewState.BUSY;
-      return null;
     } finally {
       state = ViewState.IDLE;
     }
