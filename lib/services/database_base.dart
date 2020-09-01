@@ -1,3 +1,4 @@
+import 'package:flutter_chatbox/models/message.dart';
 import 'package:flutter_chatbox/models/user.dart';
 
 abstract class DbBase {
@@ -11,5 +12,5 @@ abstract class DbBase {
 
   Future<bool> updateProfilePhoto(String userID, String photoUrl);
 
-  Stream getChatMessages(String senderID, String receiverID);
+  Stream<List<Message>> getChatMessages(String senderID, String receiverID);
 }

@@ -1,6 +1,7 @@
 import 'dart:io';
 
 import 'package:flutter_chatbox/locator.dart';
+import 'package:flutter_chatbox/models/message.dart';
 import 'package:flutter_chatbox/models/user.dart';
 import 'package:flutter_chatbox/services/auth_base.dart';
 import 'package:flutter_chatbox/services/fake_auth_service.dart';
@@ -123,6 +124,14 @@ class UserRepository implements AuthBase {
       return await Future.value(List<AppUser>());
     } else {
       return await _dbService.getUsers();
+    }
+  }
+
+  Stream<List<Message>> getChatMessages(String senderID, String receiverID) {
+    if (appMode == AppMode.DEBUG) {
+      return Stream.value(List<Message>());
+    } else {
+      return _dbService.getChatMessages(senderID, receiverID);
     }
   }
 }

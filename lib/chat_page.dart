@@ -1,5 +1,8 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_chatbox/models/message.dart';
 import 'package:flutter_chatbox/models/user.dart';
+import 'package:flutter_chatbox/viewmodel/user_model.dart';
+import 'package:provider/provider.dart';
 
 class ChatPage extends StatefulWidget {
   final AppUser sender, receiver;
@@ -15,6 +18,9 @@ class _ChatPageState extends State<ChatPage> {
 
   @override
   Widget build(BuildContext context) {
+    AppUser _sender = widget.sender;
+    AppUser _receiver = widget.receiver;
+    final _userVM = Provider.of<UserViewmodel>(context);
     return Scaffold(
       appBar: AppBar(
         title: Text(widget.receiver.username),
@@ -22,8 +28,27 @@ class _ChatPageState extends State<ChatPage> {
       body: Column(
         children: [
           Expanded(
-            child: ListView(
-              children: [Text('message')],
+            child: StreamBuilder<List<Message>>(
+              stream: _userVM.getChatMessages(_sender.userID, _receiver.userID),
+              builder: (context, snap) {
+                if (snap.connectionState == ConnectionState.waiting)
+                  return Center(child: CircularProgressIndicator());
+                if (snap.hasData) {
+                  List<Message> messages = snap.data;
+                  if (messages.length <= 0)
+                    return Center(child: Text("You send the first message 😍"));
+                  return ListView.builder(
+                      itemCount: messages.length,
+                      itemBuilder: (context, index) {
+                        Message message = messages[index];
+                        return ListTile(
+                          title: Text(message.message),
+                        );
+                      });
+                } else {
+                  return Text('Got an error');
+                }
+              },
             ),
           ),
           Padding(
