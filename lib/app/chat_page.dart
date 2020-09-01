@@ -93,7 +93,6 @@ class _ChatPageState extends State<ChatPage> {
                           duration: Duration(milliseconds: 300),
                           curve: Curves.easeInOut);
                     }
-                    ;
                   },
                 )
               ],

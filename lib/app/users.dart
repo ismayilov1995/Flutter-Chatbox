@@ -28,6 +28,19 @@ class _UsersPageState extends State<UsersPage> {
                 return Center(child: CircularProgressIndicator());
               if (snap.hasData) {
                 var users = snap.data;
+                if (snap.data.length <= 1)
+                  return Center(
+                      child: Column(
+                    mainAxisSize: MainAxisSize.min,
+                    children: [
+                      Text("No one use this app, you're first 🙃", style: Theme.of(context).textTheme.headline6,),
+                      SizedBox(height: 16,),
+                      FlatButton.icon(
+                          onPressed: _onRefresh,
+                          icon: Icon(Icons.refresh),
+                          label: Text('Refresh'))
+                    ],
+                  ));
                 int index = users.indexWhere(
                     (element) => element.userID == _userVM.user.userID);
                 users.removeAt(index);

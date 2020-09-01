@@ -51,14 +51,7 @@ class _ConversationPageState extends State<ConversationPage> {
                       );
                     });
               } else {
-                return Flexible(
-                  child: Container(
-                      decoration: BoxDecoration(
-                        color: Colors.grey[200],
-                        borderRadius: BorderRadius.circular(16.0),
-                      ),
-                      child: Text("Get an error")),
-                );
+                return Center(child: Text("Get an error"));
               }
             },
           ),
