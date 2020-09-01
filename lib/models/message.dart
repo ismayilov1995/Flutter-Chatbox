@@ -15,7 +15,7 @@ class Message {
       'to': to,
       'fromMe': fromMe,
       'message': message,
-      'createdAt': createdAt,
+      'createdAt': createdAt ?? FieldValue.serverTimestamp(),
     };
   }
 

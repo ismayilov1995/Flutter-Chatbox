@@ -68,4 +68,26 @@ class FirestoreDbService implements DbBase {
     return _snap.map((messageList) =>
         messageList.docs.map((e) => Message.fromMap(e.data())).toList());
   }
+
+  @override
+  Future<bool> sendMessage(Message message) async {
+    String _messageID = _firestore.collection("chat").doc().id;
+    String _myDocId = message.from + '--' + message.to;
+    String _receiverDocId = message.to + '--' + message.from;
+    var _messageToMap = message.toMap();
+    await _firestore
+        .collection("chat")
+        .doc(_myDocId)
+        .collection("messages")
+        .doc(_messageID)
+        .set(_messageToMap);
+    _messageToMap.update('fromMe', (value) => false);
+    await _firestore
+        .collection("chat")
+        .doc(_receiverDocId)
+        .collection("messages")
+        .doc(_messageID)
+        .set(_messageToMap);
+    return true;
+  }
 }

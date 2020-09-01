@@ -134,4 +134,12 @@ class UserRepository implements AuthBase {
       return _dbService.getChatMessages(senderID, receiverID);
     }
   }
+
+  Future<bool> sendMessage(Message message) async {
+    if (appMode == AppMode.DEBUG) {
+      return Future.value(true);
+    } else {
+      return await _dbService.sendMessage(message);
+    }
+  }
 }

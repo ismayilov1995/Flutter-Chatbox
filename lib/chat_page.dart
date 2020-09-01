@@ -69,7 +69,16 @@ class _ChatPageState extends State<ChatPage> {
                 ),
                 FloatingActionButton(
                   child: Icon(Icons.send),
-                  onPressed: () {},
+                  onPressed: () async {
+                    if (_messageCtrl.text.trim().length == 0) return;
+                    Message message = Message(
+                        from: _sender.userID,
+                        to: _receiver.userID,
+                        fromMe: true,
+                        message: _messageCtrl.text);
+                    var isSend = await _userVM.sendMessage(message);
+                    if (isSend) _messageCtrl.clear();
+                  },
                 )
               ],
             ),

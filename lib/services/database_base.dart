@@ -13,4 +13,6 @@ abstract class DbBase {
   Future<bool> updateProfilePhoto(String userID, String photoUrl);
 
   Stream<List<Message>> getChatMessages(String senderID, String receiverID);
+
+  Future<bool> sendMessage(Message message) {}
 }
