@@ -48,11 +48,21 @@ class FirestoreDbService implements DbBase {
     List<AppUser> users = List<AppUser>();
     QuerySnapshot usersSnapshot = await _firestore.collection("users").get();
     // Method 1
-      // for (DocumentSnapshot user in usersSnapshot.docs) {
-      //   users.add(AppUser.mapFrom(user.data()));
-      // }
+    // for (DocumentSnapshot user in usersSnapshot.docs) {
+    //   users.add(AppUser.mapFrom(user.data()));
+    // }
     // Method 2
     users = usersSnapshot.docs.map((e) => AppUser.mapFrom(e.data())).toList();
     return users;
+  }
+
+  @override
+  Stream getChatMessages(String senderID, String receiverID) {
+    return _firestore
+        .collection("chat")
+        .doc(senderID + "--" + receiverID)
+        .collection("messages")
+        .orderBy("createdAt")
+        .snapshots();
   }
 }
