@@ -1,7 +1,9 @@
+import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_chatbox/models/message.dart';
 import 'package:flutter_chatbox/models/user.dart';
 import 'package:flutter_chatbox/viewmodel/user_model.dart';
+import 'package:intl/intl.dart';
 import 'package:provider/provider.dart';
 
 class ChatPage extends StatefulWidget {
@@ -106,6 +108,7 @@ class _ChatPageState extends State<ChatPage> {
   Widget _singleMessageView(Message message) {
     Color _msgColorFrom = Colors.blue[100];
     Color _msgColorTo = Colors.orange[100];
+    var createdAt = _timestampToTime(message.createdAt ?? Timestamp.now());
     bool _fromMe = message.fromMe;
     if (_fromMe) {
       return Column(
@@ -117,6 +120,10 @@ class _ChatPageState extends State<ChatPage> {
             decoration: BoxDecoration(
                 color: _msgColorFrom, borderRadius: BorderRadius.circular(16)),
             child: Text(message.message),
+          ),
+          Padding(
+            padding: const EdgeInsets.only(right: 10.0),
+            child: Text(createdAt),
           )
         ],
       );
@@ -131,8 +138,17 @@ class _ChatPageState extends State<ChatPage> {
                 color: _msgColorTo, borderRadius: BorderRadius.circular(16)),
             child: Text(message.message),
           ),
+          Padding(
+            padding: const EdgeInsets.only(left: 10.0),
+            child: Text(createdAt),
+          )
         ],
       );
     }
+  }
+
+  String _timestampToTime(Timestamp createdAt) {
+    var _formatter = DateFormat.Hm();
+    return _formatter.format(createdAt.toDate());
   }
 }
