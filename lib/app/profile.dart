@@ -1,8 +1,9 @@
-import 'package:firebase_auth/firebase_auth.dart';
+import 'dart:io';
 import 'package:flutter/material.dart';
 import 'package:flutter_chatbox/common_widget/responsive_alertdialog.dart';
 import 'package:flutter_chatbox/common_widget/social_login_button.dart';
 import 'package:flutter_chatbox/viewmodel/user_model.dart';
+import 'package:image_picker/image_picker.dart';
 import 'package:provider/provider.dart';
 
 class ProfilePage extends StatefulWidget {
@@ -11,6 +12,7 @@ class ProfilePage extends StatefulWidget {
 }
 
 class _ProfilePageState extends State<ProfilePage> {
+  File _profilePhoto;
   TextEditingController _usernameCtrl;
 
   @override
@@ -45,19 +47,24 @@ class _ProfilePageState extends State<ProfilePage> {
             children: [
               Padding(
                 padding: const EdgeInsets.symmetric(vertical: 12.0),
-                child: Stack(children: [
+                child:
+                    Stack(alignment: AlignmentDirectional.bottomEnd, children: [
                   CircleAvatar(
                     radius: 75.0,
-                    backgroundImage: NetworkImage(_userVM.user.profileUrl),
+                    backgroundImage: _profilePhoto == null
+                        ? NetworkImage(_userVM.user.profileUrl)
+                        : FileImage(_profilePhoto),
                   ),
-                  Positioned(
-                      bottom: 0,
-                      right: 0,
-                      child: IconButton(
-                        icon: Icon(Icons.photo_camera),
-                        iconSize: 36,
-                        onPressed: () {},
-                      ))
+                  Container(
+                    decoration: BoxDecoration(
+                        color: Colors.grey[200],
+                        borderRadius: BorderRadius.circular(40)),
+                    child: IconButton(
+                      icon: Icon(Icons.photo_camera),
+                      iconSize: 36,
+                      onPressed: () => _pickImageModal(_userVM),
+                    ),
+                  )
                 ]),
               ),
               Text(
@@ -133,5 +140,42 @@ class _ProfilePageState extends State<ProfilePage> {
         allowBtn: "Ok",
       ).show(context);
     }
+  }
+
+  void _pickImageModal(UserViewmodel userVM) {
+    showModalBottomSheet(
+        context: context,
+        isScrollControlled: true,
+        builder: (context) => Wrap(
+              children: [
+                Column(
+                  children: [
+                    ListTile(
+                      leading: Icon(Icons.camera_alt),
+                      title: Text("Take new one"),
+                      onTap: () => _pickImage(ImageSource.camera),
+                    ),
+                    ListTile(
+                      leading: Icon(Icons.image),
+                      title: Text("Choose from gallery"),
+                      onTap: () => _pickImage(ImageSource.gallery),
+                    ),
+                    ListTile(
+                      leading: Icon(Icons.cancel),
+                      title: Text("Cancel"),
+                    ),
+                  ],
+                )
+              ],
+            ));
+  }
+
+  _pickImage(ImageSource source) async {
+    final _picker = ImagePicker();
+    var _pickedImage = await _picker.getImage(source: source);
+    setState(() {
+      _profilePhoto = File(_pickedImage.path);
+    });
+    Navigator.of(context).pop();
   }
 }
