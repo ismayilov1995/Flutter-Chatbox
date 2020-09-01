@@ -14,6 +14,7 @@ class ProfilePage extends StatefulWidget {
 class _ProfilePageState extends State<ProfilePage> {
   File _profilePhoto;
   TextEditingController _usernameCtrl;
+  final _scaffoldKey = GlobalKey<ScaffoldState>();
 
   @override
   void initState() {
@@ -32,6 +33,7 @@ class _ProfilePageState extends State<ProfilePage> {
     UserViewmodel _userVM = Provider.of<UserViewmodel>(context);
     _usernameCtrl.text = _userVM.user.username;
     return Scaffold(
+      key: _scaffoldKey,
       appBar: AppBar(
         title: Text("Profile"),
         actions: [
@@ -94,8 +96,7 @@ class _ProfilePageState extends State<ProfilePage> {
                   buttonText: "Save changes",
                   onPressed: () {
                     _updateUsername(context, _userVM);
-                    if(_profilePhoto != null)
-                      _updateProfilePhoto(_userVM);
+                    _updateProfilePhoto(_userVM);
                   },
                 ),
               )
@@ -135,12 +136,6 @@ class _ProfilePageState extends State<ProfilePage> {
           allowBtn: "Ok",
         ).show(context);
       }
-    } else {
-      ResponsiveAlertDialog(
-        title: "Warning",
-        content: "You not change anything",
-        allowBtn: "Ok",
-      ).show(context);
     }
   }
 
@@ -172,16 +167,26 @@ class _ProfilePageState extends State<ProfilePage> {
             ));
   }
 
-  _pickImage(ImageSource source) async {
+  void _pickImage(ImageSource source) async {
     final _picker = ImagePicker();
     var _pickedImage = await _picker.getImage(source: source);
-    setState(() {
-      _profilePhoto = File(_pickedImage.path);
-    });
-    Navigator.of(context).pop();
+    if (_pickedImage != null) {
+      setState(() {
+        _profilePhoto = File(_pickedImage.path);
+      });
+      Navigator.of(context).pop();
+    }
   }
 
   void _updateProfilePhoto(UserViewmodel userVM) async {
-
+    if (_profilePhoto == null) return;
+    var url = await userVM.uploadImage(
+        userVM.user.userID, 'profile_photo', _profilePhoto);
+    if (url != null) {
+      _profilePhoto = null;
+      _scaffoldKey.currentState.showSnackBar(SnackBar(
+        content: Text("Image is updated successfuly"),
+      ));
+    }
   }
 }

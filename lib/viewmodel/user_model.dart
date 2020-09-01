@@ -1,3 +1,5 @@
+import 'dart:io';
+
 import 'package:flutter/cupertino.dart';
 import 'package:flutter_chatbox/locator.dart';
 import 'package:flutter_chatbox/models/user.dart';
@@ -128,5 +130,11 @@ class UserViewmodel with ChangeNotifier implements AuthBase {
     bool res = await _userRepository.updateUsername(userID, username);
     if (res) user.username = username;
     return res;
+  }
+
+  Future<String> uploadImage(String userID, String s, File profilePhoto) async {
+    var url = await _userRepository.uploadImage(userID, s, profilePhoto);
+    user.profileUrl = url;
+    return url;
   }
 }

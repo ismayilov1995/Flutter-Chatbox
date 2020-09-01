@@ -1,8 +1,11 @@
+import 'dart:io';
+
 import 'package:flutter_chatbox/locator.dart';
 import 'package:flutter_chatbox/models/user.dart';
 import 'package:flutter_chatbox/services/auth_base.dart';
 import 'package:flutter_chatbox/services/fake_auth_service.dart';
 import 'package:flutter_chatbox/services/firebase_auth_service.dart';
+import 'package:flutter_chatbox/services/firebase_storage_service.dart';
 import 'package:flutter_chatbox/services/firestore_db_service.dart';
 
 enum AppMode { DEBUG, RELEASE }
@@ -11,6 +14,7 @@ class UserRepository implements AuthBase {
   FirebaseAuthService _firebaseAuthService = locator<FirebaseAuthService>();
   FakeAuthService _fakeAuthService = locator<FakeAuthService>();
   FirestoreDbService _dbService = locator<FirestoreDbService>();
+  FirebaseStorageService _storageService = locator<FirebaseStorageService>();
 
   AppMode appMode = AppMode.RELEASE;
 
@@ -101,6 +105,16 @@ class UserRepository implements AuthBase {
       return await _fakeAuthService.updateUsername(userID, username);
     } else {
       return await _dbService.updateUsername(userID, username);
+    }
+  }
+
+  Future<String> uploadImage(String userID, String s, File profilePhoto) async {
+    if (appMode == AppMode.DEBUG) {
+      return await Future.value('');
+    } else {
+      String url = await _storageService.uploadImage(userID, s, profilePhoto);
+      await _dbService.updateProfilePhoto(userID, url);
+      return url;
     }
   }
 }
