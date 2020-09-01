@@ -21,7 +21,7 @@ class Message {
 
   Message.fromMap(Map<String, dynamic> map)
       : from = map['from'],
-        to = map['ro'],
+        to = map['to'],
         fromMe = map['fromMe'],
         message = map['message'],
         createdAt = map['createdAt'];
