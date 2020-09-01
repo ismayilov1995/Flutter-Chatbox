@@ -20,10 +20,19 @@ class _ChatPageState extends State<ChatPage> {
   Widget build(BuildContext context) {
     AppUser _sender = widget.sender;
     AppUser _receiver = widget.receiver;
+    ScrollController _scrollCtrl = ScrollController();
     final _userVM = Provider.of<UserViewmodel>(context);
     return Scaffold(
       appBar: AppBar(
-        title: Text(widget.receiver.username),
+        title: Row(
+          children: [
+            CircleAvatar(
+              backgroundImage: NetworkImage(widget.receiver.profileUrl),
+            ),
+            SizedBox(width: 12),
+            Text(widget.receiver.username)
+          ],
+        ),
       ),
       body: Column(
         children: [
@@ -38,12 +47,11 @@ class _ChatPageState extends State<ChatPage> {
                   if (messages.length <= 0)
                     return Center(child: Text("You send the first message 😍"));
                   return ListView.builder(
+                      reverse: true,
+                      controller: _scrollCtrl,
                       itemCount: messages.length,
                       itemBuilder: (context, index) {
-                        Message message = messages[index];
-                        return ListTile(
-                          title: Text(message.message),
-                        );
+                        return _singleMessageView(messages[index]);
                       });
                 } else {
                   return Text('Got an error');
@@ -77,7 +85,14 @@ class _ChatPageState extends State<ChatPage> {
                         fromMe: true,
                         message: _messageCtrl.text);
                     var isSend = await _userVM.sendMessage(message);
-                    if (isSend) _messageCtrl.clear();
+                    if (isSend) {
+                      _messageCtrl.clear();
+                      _scrollCtrl.animateTo(
+                          0.0,
+                          duration: Duration(milliseconds: 300),
+                          curve: Curves.easeInOut);
+                    }
+                    ;
                   },
                 )
               ],
@@ -86,5 +101,38 @@ class _ChatPageState extends State<ChatPage> {
         ],
       ),
     );
+  }
+
+  Widget _singleMessageView(Message message) {
+    Color _msgColorFrom = Colors.blue[100];
+    Color _msgColorTo = Colors.orange[100];
+    bool _fromMe = message.fromMe;
+    if (_fromMe) {
+      return Column(
+        crossAxisAlignment: CrossAxisAlignment.end,
+        children: [
+          Container(
+            padding: EdgeInsets.all(10),
+            margin: EdgeInsets.all(10),
+            decoration: BoxDecoration(
+                color: _msgColorFrom, borderRadius: BorderRadius.circular(16)),
+            child: Text(message.message),
+          )
+        ],
+      );
+    } else {
+      return Column(
+        crossAxisAlignment: CrossAxisAlignment.start,
+        children: [
+          Container(
+            padding: EdgeInsets.all(10),
+            margin: EdgeInsets.all(10),
+            decoration: BoxDecoration(
+                color: _msgColorTo, borderRadius: BorderRadius.circular(16)),
+            child: Text(message.message),
+          ),
+        ],
+      );
+    }
   }
 }

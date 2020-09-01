@@ -5,7 +5,7 @@ class Message {
   final String to;
   final bool fromMe;
   final String message;
-  final DateTime createdAt;
+  final Timestamp createdAt;
 
   Message({this.from, this.to, this.fromMe, this.message, this.createdAt});
 
@@ -24,7 +24,7 @@ class Message {
         to = map['ro'],
         fromMe = map['fromMe'],
         message = map['message'],
-        createdAt = (map['createdAt'] as Timestamp).toDate();
+        createdAt = map['createdAt'];
 
   @override
   String toString() {

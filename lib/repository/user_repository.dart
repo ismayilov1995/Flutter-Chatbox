@@ -25,7 +25,9 @@ class UserRepository implements AuthBase {
       return await _fakeAuthService.currentUser();
     } else {
       AppUser _user = await _firebaseAuthService.currentUser();
-      return await _dbService.getUser(_user.userID);
+      if(_user != null)
+        return await _dbService.getUser(_user.userID);
+      return null;
     }
   }
 
