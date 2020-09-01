@@ -11,6 +11,8 @@ class ChatPage extends StatefulWidget {
 }
 
 class _ChatPageState extends State<ChatPage> {
+  final _messageCtrl = TextEditingController();
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -19,7 +21,34 @@ class _ChatPageState extends State<ChatPage> {
       ),
       body: Column(
         children: [
-          Text('sad'),
+          Expanded(
+            child: ListView(
+              children: [Text('message')],
+            ),
+          ),
+          Padding(
+            padding: const EdgeInsets.all(12.0),
+            child: Row(
+              children: [
+                Expanded(
+                    child: TextFormField(
+                  controller: _messageCtrl,
+                  decoration: InputDecoration(
+                    hintText: "Type message...",
+                    border: OutlineInputBorder(
+                        borderRadius: BorderRadius.circular(40)),
+                  ),
+                )),
+                SizedBox(
+                  width: 12,
+                ),
+                FloatingActionButton(
+                  child: Icon(Icons.send),
+                  onPressed: () {},
+                )
+              ],
+            ),
+          )
         ],
       ),
     );
