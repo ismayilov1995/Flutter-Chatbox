@@ -5,6 +5,8 @@ import 'package:flutter_chatbox/app/tab_items.dart';
 import 'package:flutter_chatbox/app/users.dart';
 import 'package:flutter_chatbox/models/user.dart';
 
+import 'chats_page.dart';
+
 class HomePage extends StatefulWidget {
   final AppUser user;
 
@@ -18,11 +20,15 @@ class _HomePageState extends State<HomePage> {
   TabItem _currentTab = TabItem.AllUsers;
   Map<TabItem, GlobalKey<NavigatorState>> navigatorKeys = {
     TabItem.AllUsers: GlobalKey<NavigatorState>(),
+    TabItem.Chats: GlobalKey<NavigatorState>(),
     TabItem.Profile: GlobalKey<NavigatorState>(),
   };
 
   Map<TabItem, Widget> allPages() {
-    return {TabItem.AllUsers: UsersPage(), TabItem.Profile: ProfilePage()};
+    return {
+      TabItem.AllUsers: UsersPage(),
+      TabItem.Chats: ChatsPage(),
+      TabItem.Profile: ProfilePage()};
   }
 
   @override

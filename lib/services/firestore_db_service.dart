@@ -81,6 +81,13 @@ class FirestoreDbService implements DbBase {
         .collection("messages")
         .doc(_messageID)
         .set(_messageToMap);
+    await _firestore.collection("chat").doc(_myDocId).set({
+      "owner": message.from,
+      "talk": message.to,
+      "lastMessage": message.message,
+      "seen": true,
+      "createdAt": FieldValue.serverTimestamp()
+    });
     _messageToMap.update('fromMe', (value) => false);
     await _firestore
         .collection("chat")
@@ -88,6 +95,13 @@ class FirestoreDbService implements DbBase {
         .collection("messages")
         .doc(_messageID)
         .set(_messageToMap);
+    await _firestore.collection("chat").doc(_receiverDocId).set({
+      "owner": message.to,
+      "talk": message.from,
+      "lastMessage": message.message,
+      "seen": false,
+      "createdAt": FieldValue.serverTimestamp()
+    });
     return true;
   }
 }

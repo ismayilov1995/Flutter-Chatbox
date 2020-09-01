@@ -26,15 +26,7 @@ class _ChatPageState extends State<ChatPage> {
     final _userVM = Provider.of<UserViewmodel>(context);
     return Scaffold(
       appBar: AppBar(
-        title: Row(
-          children: [
-            CircleAvatar(
-              backgroundImage: NetworkImage(widget.receiver.profileUrl),
-            ),
-            SizedBox(width: 12),
-            Text(widget.receiver.username)
-          ],
-        ),
+        title: Text(widget.receiver.username),
       ),
       body: Column(
         children: [
@@ -89,8 +81,7 @@ class _ChatPageState extends State<ChatPage> {
                     var isSend = await _userVM.sendMessage(message);
                     if (isSend) {
                       _messageCtrl.clear();
-                      _scrollCtrl.animateTo(
-                          0.0,
+                      _scrollCtrl.animateTo(0.0,
                           duration: Duration(milliseconds: 300),
                           curve: Curves.easeInOut);
                     }
