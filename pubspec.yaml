@@ -20,6 +20,7 @@ dependencies:
   flutter_facebook_login: ^3.0.0
   image_picker: ^0.6.7+7
   cloud_firestore: ^0.14.0+2
+  firebase_storage: ^4.0.0
 
 dev_dependencies:
   flutter_test:

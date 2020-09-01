@@ -94,6 +94,8 @@ class _ProfilePageState extends State<ProfilePage> {
                   buttonText: "Save changes",
                   onPressed: () {
                     _updateUsername(context, _userVM);
+                    if(_profilePhoto != null)
+                      _updateProfilePhoto(_userVM);
                   },
                 ),
               )
@@ -177,5 +179,9 @@ class _ProfilePageState extends State<ProfilePage> {
       _profilePhoto = File(_pickedImage.path);
     });
     Navigator.of(context).pop();
+  }
+
+  void _updateProfilePhoto(UserViewmodel userVM) async {
+
   }
 }
