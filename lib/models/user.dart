@@ -14,6 +14,11 @@ class AppUser {
 
   AppUser({@required this.userID, @required this.email});
 
+  AppUser.idAndImage(
+      {@required this.userID,
+      @required this.username,
+      @required this.profileUrl});
+
   Map<String, dynamic> toMap() {
     return {
       'userID': userID,
