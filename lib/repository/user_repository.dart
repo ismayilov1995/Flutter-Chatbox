@@ -117,4 +117,12 @@ class UserRepository implements AuthBase {
       return url;
     }
   }
+
+  Future<List<AppUser>> getUsers() async {
+    if (appMode == AppMode.DEBUG) {
+      return await Future.value(List<AppUser>());
+    } else {
+      return await _dbService.getUsers();
+    }
+  }
 }

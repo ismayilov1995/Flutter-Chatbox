@@ -42,4 +42,17 @@ class FirestoreDbService implements DbBase {
         .update({"profileUrl": photoUrl});
     return true;
   }
+
+  @override
+  Future<List<AppUser>> getUsers() async {
+    List<AppUser> users = List<AppUser>();
+    QuerySnapshot usersSnapshot = await _firestore.collection("users").get();
+    // Method 1
+      // for (DocumentSnapshot user in usersSnapshot.docs) {
+      //   users.add(AppUser.mapFrom(user.data()));
+      // }
+    // Method 2
+    users = usersSnapshot.docs.map((e) => AppUser.mapFrom(e.data())).toList();
+    return users;
+  }
 }

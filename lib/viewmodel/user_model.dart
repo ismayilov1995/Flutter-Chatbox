@@ -137,4 +137,8 @@ class UserViewmodel with ChangeNotifier implements AuthBase {
     user.profileUrl = url;
     return url;
   }
+
+  Future<List<AppUser>> getUsers() async {
+    return await _userRepository.getUsers();
+  }
 }
