@@ -1,4 +1,5 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
+import 'package:flutter_chatbox/models/chat.dart';
 import 'package:flutter_chatbox/models/message.dart';
 import 'package:flutter_chatbox/models/user.dart';
 import 'package:flutter_chatbox/services/database_base.dart';
@@ -55,6 +56,19 @@ class FirestoreDbService implements DbBase {
     // Method 2
     users = usersSnapshot.docs.map((e) => AppUser.mapFrom(e.data())).toList();
     return users;
+  }
+
+  @override
+  Future<List<Chat>> getConversations(String userID) async {
+    List<Chat> conversations;
+    QuerySnapshot _chatSnapshot = await _firestore
+        .collection('chat')
+        .where('owner', isEqualTo: userID)
+        .orderBy('createdAt', descending: true)
+        .get();
+    conversations =
+        _chatSnapshot.docs.map((e) => Chat.fromMap(e.data())).toList();
+    return conversations;
   }
 
   @override

@@ -26,7 +26,15 @@ class _ChatPageState extends State<ChatPage> {
     final _userVM = Provider.of<UserViewmodel>(context);
     return Scaffold(
       appBar: AppBar(
-        title: Text(widget.receiver.username),
+        title: Row(
+          children: [
+            CircleAvatar(
+              backgroundImage: NetworkImage(_receiver.profileUrl),
+            ),
+            SizedBox(width: 16),
+            Text(widget.receiver.username),
+          ],
+        ),
       ),
       body: Column(
         children: [

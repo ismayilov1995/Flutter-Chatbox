@@ -7,6 +7,8 @@ class Chat {
   final bool seen;
   final Timestamp createdAt;
   final Timestamp seenAt;
+  String talkUsername;
+  String talkProfilephoto;
 
   Chat(
       {this.owner,
@@ -34,4 +36,9 @@ class Chat {
         seen = map['seen'],
         createdAt = map['createdAt'],
         seenAt = map['seenAt'];
+
+  @override
+  String toString() {
+    return 'Chat{owner: $owner, talk: $talk, lastMessage: $lastMessage, seen: $seen, createdAt: $createdAt, seenAt: $seenAt}';
+  }
 }

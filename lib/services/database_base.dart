@@ -1,3 +1,4 @@
+import 'package:flutter_chatbox/models/chat.dart';
 import 'package:flutter_chatbox/models/message.dart';
 import 'package:flutter_chatbox/models/user.dart';
 
@@ -7,6 +8,8 @@ abstract class DbBase {
   Future<AppUser> getUser(String userId);
 
   Future<List<AppUser>> getUsers();
+
+  Future<List<Chat>> getConversations(String userID);
 
   Future<bool> updateUsername(String userID, String username);
 

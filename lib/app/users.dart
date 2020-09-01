@@ -1,6 +1,6 @@
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
-import 'package:flutter_chatbox/chat_page.dart';
+import 'file:///E:/Android/AndroidStudioProjects/flutter_chatbox/lib/app/chat_page.dart';
 import 'package:flutter_chatbox/models/user.dart';
 import 'package:flutter_chatbox/viewmodel/user_model.dart';
 import 'package:provider/provider.dart';

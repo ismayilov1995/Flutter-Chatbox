@@ -1,6 +1,7 @@
 import 'dart:io';
 
 import 'package:flutter_chatbox/locator.dart';
+import 'package:flutter_chatbox/models/chat.dart';
 import 'package:flutter_chatbox/models/message.dart';
 import 'package:flutter_chatbox/models/user.dart';
 import 'package:flutter_chatbox/services/auth_base.dart';
@@ -18,6 +19,7 @@ class UserRepository implements AuthBase {
   FirebaseStorageService _storageService = locator<FirebaseStorageService>();
 
   AppMode appMode = AppMode.RELEASE;
+  List<AppUser> allUsers = List<AppUser>();
 
   @override
   Future<AppUser> currentUser() async {
@@ -25,8 +27,7 @@ class UserRepository implements AuthBase {
       return await _fakeAuthService.currentUser();
     } else {
       AppUser _user = await _firebaseAuthService.currentUser();
-      if(_user != null)
-        return await _dbService.getUser(_user.userID);
+      if (_user != null) return await _dbService.getUser(_user.userID);
       return null;
     }
   }
@@ -125,8 +126,38 @@ class UserRepository implements AuthBase {
     if (appMode == AppMode.DEBUG) {
       return await Future.value(List<AppUser>());
     } else {
-      return await _dbService.getUsers();
+      allUsers = await _dbService.getUsers();
+      return allUsers;
     }
+  }
+
+  Future<List<Chat>> getConversations(String userID) async {
+    if (appMode == AppMode.DEBUG) {
+      return await Future.value(List<Chat>());
+    } else {
+      var conversationList = await _dbService.getConversations(userID);
+      for (var item in conversationList) {
+        var userInUserlist = getUserFromList(item.talk);
+        if (userInUserlist != null) {
+          item.talkUsername = userInUserlist.username;
+          item.talkProfilephoto = userInUserlist.profileUrl;
+        } else {
+          var userFromDb = await _dbService.getUser(item.talk);
+          item.talkUsername = userFromDb.username;
+          item.talkProfilephoto = userFromDb.profileUrl;
+        }
+      }
+      return conversationList;
+    }
+  }
+
+  AppUser getUserFromList(String userID) {
+    for (int i = 0; i < allUsers.length; i++) {
+      if (allUsers[i].userID == userID) {
+        return allUsers[i];
+      }
+    }
+    return null;
   }
 
   Stream<List<Message>> getChatMessages(String senderID, String receiverID) {
