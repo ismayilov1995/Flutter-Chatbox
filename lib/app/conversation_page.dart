@@ -40,6 +40,7 @@ class _ConversationPageState extends State<ConversationPage> {
                         ),
                         title: Text(chat.talkUsername),
                         subtitle: Text(chat.lastMessage),
+                        trailing: Text(chat.timeDifference),
                         onTap: () => Navigator.of(context, rootNavigator: true)
                             .push(CupertinoPageRoute(
                                 builder: (context) => ChatPage(

@@ -118,4 +118,12 @@ class FirestoreDbService implements DbBase {
     });
     return true;
   }
+
+  @override
+  Future<DateTime> showTime(String userID) async {
+    await _firestore.collection('utils').doc(userID).set({"time": FieldValue.serverTimestamp()});
+    var timeMap = await _firestore.collection('utils').doc(userID).get();
+    Timestamp time = timeMap.data()['time'];
+    return time.toDate();
+  }
 }

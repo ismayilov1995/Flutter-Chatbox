@@ -86,9 +86,9 @@ class _ChatPageState extends State<ChatPage> {
                         to: _receiver.userID,
                         fromMe: true,
                         message: _messageCtrl.text);
+                    _messageCtrl.clear();
                     var isSend = await _userVM.sendMessage(message);
                     if (isSend) {
-                      _messageCtrl.clear();
                       _scrollCtrl.animateTo(0.0,
                           duration: Duration(milliseconds: 300),
                           curve: Curves.easeInOut);

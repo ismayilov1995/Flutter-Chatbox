@@ -17,5 +17,7 @@ abstract class DbBase {
 
   Stream<List<Message>> getChatMessages(String senderID, String receiverID);
 
-  Future<bool> sendMessage(Message message) {}
+  Future<bool> sendMessage(Message message);
+
+  Future<DateTime> showTime(String userID);
 }

@@ -9,6 +9,7 @@ import 'package:flutter_chatbox/services/fake_auth_service.dart';
 import 'package:flutter_chatbox/services/firebase_auth_service.dart';
 import 'package:flutter_chatbox/services/firebase_storage_service.dart';
 import 'package:flutter_chatbox/services/firestore_db_service.dart';
+import 'package:timeago/timeago.dart' as timeago;
 
 enum AppMode { DEBUG, RELEASE }
 
@@ -135,6 +136,7 @@ class UserRepository implements AuthBase {
     if (appMode == AppMode.DEBUG) {
       return await Future.value(List<Chat>());
     } else {
+      DateTime time = await _dbService.showTime(userID);
       var conversationList = await _dbService.getConversations(userID);
       for (var item in conversationList) {
         var userInUserlist = getUserFromList(item.talk);
@@ -146,6 +148,7 @@ class UserRepository implements AuthBase {
           item.talkUsername = userFromDb.username;
           item.talkProfilephoto = userFromDb.profileUrl;
         }
+        _calcTimeAgo(item, time);
       }
       return conversationList;
     }
@@ -174,5 +177,11 @@ class UserRepository implements AuthBase {
     } else {
       return await _dbService.sendMessage(message);
     }
+  }
+
+  void _calcTimeAgo(Chat item, DateTime time) {
+    var duration = time.difference(item.createdAt.toDate());
+    timeago.setLocaleMessages('az', timeago.AzMessages());
+    item.timeDifference = timeago.format(time.subtract(duration), locale: 'az');
   }
 }

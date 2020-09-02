@@ -9,6 +9,7 @@ class Chat {
   final Timestamp seenAt;
   String talkUsername;
   String talkProfilephoto;
+  String timeDifference;
 
   Chat(
       {this.owner,

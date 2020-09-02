@@ -25,7 +25,7 @@ class AppUser {
       'email': email,
       'username': username ??
           email.substring(0, email.indexOf('@')) + createRandomNumb(),
-      'profileUrl': profileUrl ?? '',
+      'profileUrl': profileUrl ?? 'https://ramcotubular.com/wp-content/uploads/default-avatar.jpg',
       'createdAt': createdAt ?? FieldValue.serverTimestamp(),
       'updatedAt': updatedAt ?? FieldValue.serverTimestamp(),
       'level': level ?? 1,
