@@ -29,12 +29,15 @@ class UsersViewmodel with ChangeNotifier {
     notifyListeners();
   }
 
-  Future<List<AppUser>> getPaginatedUsers(AppUser lastUser, int limit) async {
+  Future<void> getPaginatedUsers(AppUser lastUser, int limit) async {
+    if (_users.length > 0) _lastUser = _users.last;
     state = UsersViewState.BUSY;
     _users = await _userRepository.getPaginatedUsers(lastUser, limit);
     state = UsersViewState.LOADED;
-    return _users;
+    _users.forEach((element) => print(element.username));
   }
 
-
+  Future<void> getMoreUsers() async {
+    await getPaginatedUsers(_lastUser, _limit);
+  }
 }
