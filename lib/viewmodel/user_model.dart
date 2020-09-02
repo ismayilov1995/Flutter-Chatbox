@@ -1,10 +1,12 @@
 import 'dart:io';
-
 import 'package:flutter/cupertino.dart';
 import 'package:flutter_chatbox/locator.dart';
+import 'package:flutter_chatbox/models/chat.dart';
+import 'package:flutter_chatbox/models/message.dart';
 import 'package:flutter_chatbox/models/user.dart';
 import 'package:flutter_chatbox/repository/user_repository.dart';
 import 'package:flutter_chatbox/services/auth_base.dart';
+import 'package:flutter_chatbox/services/database_base.dart';
 
 enum ViewState { IDLE, BUSY }
 
@@ -136,5 +138,21 @@ class UserViewmodel with ChangeNotifier implements AuthBase {
     var url = await _userRepository.uploadImage(userID, s, profilePhoto);
     user.profileUrl = url;
     return url;
+  }
+
+  Future<List<AppUser>> getUsers() async {
+    return await _userRepository.getUsers();
+  }
+
+  Future<List<Chat>> getConversations(String userID) async {
+    return await _userRepository.getConversations(userID);
+  }
+
+  Stream<List<Message>> getChatMessages(String senderID, String receiverID) {
+    return _userRepository.getChatMessages(senderID, receiverID);
+  }
+
+  Future<bool> sendMessage(Message message) async {
+    return await _userRepository.sendMessage(message);
   }
 }
