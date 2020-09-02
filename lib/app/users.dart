@@ -3,6 +3,7 @@ import 'package:firebase_storage/firebase_storage.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/scheduler.dart';
+import 'package:flutter_chatbox/app/chat_page.dart';
 import 'package:flutter_chatbox/models/user.dart';
 import 'package:flutter_chatbox/viewmodel/user_model.dart';
 import 'package:provider/provider.dart';
@@ -27,10 +28,10 @@ class _UsersPageState extends State<UsersPage> {
       getUsers();
     });
     _scrollController.addListener(() {
-      if (_scrollController.position.atEdge) {
-        if (_scrollController.position != 0) {
-          getUsers();
-        }
+      if (_scrollController.offset >=
+              _scrollController.position.minScrollExtent &&
+          !_scrollController.position.outOfRange) {
+        getUsers();
       }
     });
   }
@@ -71,16 +72,21 @@ class _UsersPageState extends State<UsersPage> {
     if (_users.length <= 1)
       return Center(
           child: Column(
-            mainAxisSize: MainAxisSize.min,
-            children: [
-              Text("No one use this app, you're first 🙃", style: Theme.of(context).textTheme.headline6,),
-              SizedBox(height: 16,),
-              FlatButton.icon(
-                  onPressed: _onRefresh,
-                  icon: Icon(Icons.refresh),
-                  label: Text('Refresh'))
-            ],
-          ));
+        mainAxisSize: MainAxisSize.min,
+        children: [
+          Text(
+            "No one use this app, you're first 🙃",
+            style: Theme.of(context).textTheme.headline6,
+          ),
+          SizedBox(
+            height: 16,
+          ),
+          FlatButton.icon(
+              onPressed: _onRefresh,
+              icon: Icon(Icons.refresh),
+              label: Text('Refresh'))
+        ],
+      ));
     final _userVM = Provider.of<UserViewmodel>(context, listen: false);
     int userIndex =
         _users.indexWhere((element) => element.userID == _userVM.user.userID);
@@ -100,6 +106,12 @@ class _UsersPageState extends State<UsersPage> {
               title: Text(user.username),
               subtitle: Text(user.email),
               trailing: Icon(Icons.arrow_right),
+              onTap: () => Navigator.of(context, rootNavigator: true)
+                  .push(CupertinoPageRoute(
+                      builder: (context) => ChatPage(
+                            sender: _userVM.user,
+                            receiver: user,
+                          ))),
             );
           }),
     );

@@ -189,7 +189,8 @@ class UserRepository implements AuthBase {
     if (appMode == AppMode.DEBUG) {
       return await Future.value(List<AppUser>());
     } else {
-      return await _dbService.getPaginatedUsers(lastUser, limit);
+      allUsers = await _dbService.getPaginatedUsers(lastUser, limit);
+      return allUsers;
     }
   }
 }
