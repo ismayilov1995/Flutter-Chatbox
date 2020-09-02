@@ -6,7 +6,6 @@ import 'package:flutter_chatbox/models/message.dart';
 import 'package:flutter_chatbox/models/user.dart';
 import 'package:flutter_chatbox/repository/user_repository.dart';
 import 'package:flutter_chatbox/services/auth_base.dart';
-import 'package:flutter_chatbox/services/database_base.dart';
 
 enum ViewState { IDLE, BUSY }
 

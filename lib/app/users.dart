@@ -1,3 +1,5 @@
+import 'package:cloud_firestore/cloud_firestore.dart';
+import 'package:firebase_storage/firebase_storage.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'file:///E:/Android/AndroidStudioProjects/flutter_chatbox/lib/app/chat_page.dart';
@@ -11,6 +13,19 @@ class UsersPage extends StatefulWidget {
 }
 
 class _UsersPageState extends State<UsersPage> {
+  List<AppUser> _users = [];
+  bool _isLoading = false;
+  bool _hasMore = true;
+  int _limit = 10;
+  AppUser _lastUser;
+  ScrollController _scrollController = ScrollController();
+
+  @override
+  void initState() {
+    super.initState();
+    getUsers(_lastUser);
+  }
+
   @override
   Widget build(BuildContext context) {
     UserViewmodel _userVM = Provider.of<UserViewmodel>(context);
@@ -18,7 +33,33 @@ class _UsersPageState extends State<UsersPage> {
       appBar: AppBar(
         title: Text("Users"),
       ),
-      body: Center(
+      body: Container(),
+    );
+  }
+
+  void getUsers(AppUser lastUser) async {
+    QuerySnapshot _usersSnapshot;
+    if (lastUser == null) {
+      _usersSnapshot = await FirebaseFirestore.instance
+          .collection('users')
+          .orderBy('username')
+          .limit(_limit)
+          .get();
+    } else {
+      _usersSnapshot = await FirebaseFirestore.instance
+          .collection('users')
+          .orderBy('username')
+          .startAfter([lastUser.username])
+          .limit(_limit)
+          .get();
+    }
+    _users = _usersSnapshot.docs.map((e) => AppUser.mapFrom(e.data())).toList();
+    _lastUser = _users.last;
+  }
+}
+
+/*
+Center(
         child: RefreshIndicator(
           onRefresh: _onRefresh,
           child: FutureBuilder<List<AppUser>>(
@@ -72,13 +113,12 @@ class _UsersPageState extends State<UsersPage> {
             },
           ),
         ),
-      ),
-    );
-  }
+      )
 
-  Future<void> _onRefresh() async {
+
+        Future<void> _onRefresh() async {
     setState(() {});
     await Future.delayed(Duration(seconds: 1));
     return;
   }
-}
+ */
