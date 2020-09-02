@@ -2,7 +2,6 @@ import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_storage/firebase_storage.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
-import 'file:///E:/Android/AndroidStudioProjects/flutter_chatbox/lib/app/chat_page.dart';
 import 'package:flutter_chatbox/models/user.dart';
 import 'package:flutter_chatbox/viewmodel/user_model.dart';
 import 'package:provider/provider.dart';
@@ -24,20 +23,46 @@ class _UsersPageState extends State<UsersPage> {
   void initState() {
     super.initState();
     getUsers(_lastUser);
+    _scrollController.addListener(() {
+      if (_scrollController.position.atEdge) {
+        if (_scrollController.position != 0) {
+          getUsers(_lastUser);
+        }
+      }
+    });
   }
 
   @override
   Widget build(BuildContext context) {
     UserViewmodel _userVM = Provider.of<UserViewmodel>(context);
     return Scaffold(
-      appBar: AppBar(
-        title: Text("Users"),
-      ),
-      body: Container(),
-    );
+        appBar: AppBar(
+          title: Text("Users"),
+          actions: [
+            IconButton(
+              icon: Icon(Icons.refresh),
+              onPressed: () => getUsers(_lastUser),
+            )
+          ],
+        ),
+        body: Column(
+          children: [
+            Expanded(
+              child: _users.length == 0
+                  ? Center(child: Text('There is no user'))
+                  : _generateUsersList(),
+            ),
+            _isLoading ? Center(child: CircularProgressIndicator()) : Center()
+          ],
+        ));
   }
 
   void getUsers(AppUser lastUser) async {
+    if (!_hasMore) return;
+    if (_isLoading) return;
+    setState(() {
+      _isLoading = true;
+    });
     QuerySnapshot _usersSnapshot;
     if (lastUser == null) {
       _usersSnapshot = await FirebaseFirestore.instance
@@ -53,8 +78,31 @@ class _UsersPageState extends State<UsersPage> {
           .limit(_limit)
           .get();
     }
-    _users = _usersSnapshot.docs.map((e) => AppUser.mapFrom(e.data())).toList();
+    if (_usersSnapshot.docs.length < _limit) _hasMore = false;
+    _usersSnapshot.docs.forEach((element) {
+      _users.add(AppUser.mapFrom(element.data()));
+    });
     _lastUser = _users.last;
+    setState(() {
+      _isLoading = false;
+    });
+  }
+
+  Widget _generateUsersList() {
+    return ListView.builder(
+        controller: _scrollController,
+        itemCount: _users.length,
+        itemBuilder: (context, index) {
+          AppUser user = _users[index];
+          return ListTile(
+            leading: CircleAvatar(
+              backgroundImage: NetworkImage(user.profileUrl),
+            ),
+            title: Text(user.username),
+            subtitle: Text(user.email),
+            trailing: Icon(Icons.arrow_right),
+          );
+        });
   }
 }
 
