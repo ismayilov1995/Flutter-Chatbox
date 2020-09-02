@@ -12,7 +12,7 @@ class UsersPage extends StatefulWidget {
 }
 
 class _UsersPageState extends State<UsersPage> {
-  List<AppUser> _users = [];
+  List<AppUser> _users;
   bool _isLoading = false;
   bool _hasMore = true;
   int _limit = 10;
@@ -45,16 +45,9 @@ class _UsersPageState extends State<UsersPage> {
             )
           ],
         ),
-        body: Column(
-          children: [
-            Expanded(
-              child: _users.length == 0
-                  ? Center(child: Text('There is no user'))
-                  : _generateUsersList(),
-            ),
-            _isLoading ? Center(child: CircularProgressIndicator()) : Center()
-          ],
-        ));
+        body: _users == null
+            ? Center(child: CircularProgressIndicator())
+            : _generateUsersList());
   }
 
   void getUsers(AppUser lastUser) async {
@@ -70,6 +63,7 @@ class _UsersPageState extends State<UsersPage> {
           .orderBy('username')
           .limit(_limit)
           .get();
+      _users = [];
     } else {
       _usersSnapshot = await FirebaseFirestore.instance
           .collection('users')
@@ -94,6 +88,7 @@ class _UsersPageState extends State<UsersPage> {
         itemCount: _users.length,
         itemBuilder: (context, index) {
           AppUser user = _users[index];
+          if (index == _users.length - 1) return _loadingIndicator();
           return ListTile(
             leading: CircleAvatar(
               backgroundImage: NetworkImage(user.profileUrl),
@@ -103,6 +98,19 @@ class _UsersPageState extends State<UsersPage> {
             trailing: Icon(Icons.arrow_right),
           );
         });
+  }
+
+  Widget _loadingIndicator() {
+    return _isLoading
+        ? Padding(
+            padding: const EdgeInsets.all(8.0),
+            child: Center(
+              child: Opacity(
+                  opacity: _isLoading ? 1 : 0,
+                  child: CircularProgressIndicator()),
+            ),
+          )
+        : null;
   }
 }
 
