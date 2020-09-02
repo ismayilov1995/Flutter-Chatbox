@@ -126,4 +126,28 @@ class FirestoreDbService implements DbBase {
     Timestamp time = timeMap.data()['time'];
     return time.toDate();
   }
+
+  @override
+  Future<List<AppUser>> getPaginatedUsers(AppUser lastUser, int limit) async {
+    QuerySnapshot _usersSnapshot;
+    List<AppUser> _users = [];
+    if (lastUser == null) {
+      _usersSnapshot = await FirebaseFirestore.instance
+          .collection('users')
+          .orderBy('username')
+          .limit(limit)
+          .get();
+    } else {
+      _usersSnapshot = await FirebaseFirestore.instance
+          .collection('users')
+          .orderBy('username')
+          .startAfter([lastUser.username])
+          .limit(limit)
+          .get();
+    }
+    _usersSnapshot.docs.forEach((element) {
+      _users.add(AppUser.mapFrom(element.data()));
+    });
+    return _users;
+  }
 }

@@ -2,6 +2,7 @@ import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_storage/firebase_storage.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter/scheduler.dart';
 import 'package:flutter_chatbox/models/user.dart';
 import 'package:flutter_chatbox/viewmodel/user_model.dart';
 import 'package:provider/provider.dart';
@@ -22,11 +23,13 @@ class _UsersPageState extends State<UsersPage> {
   @override
   void initState() {
     super.initState();
-    getUsers(_lastUser);
+    SchedulerBinding.instance.addPostFrameCallback((timeStamp) {
+      getUsers();
+    });
     _scrollController.addListener(() {
       if (_scrollController.position.atEdge) {
         if (_scrollController.position != 0) {
-          getUsers(_lastUser);
+          getUsers();
         }
       }
     });
@@ -34,48 +37,30 @@ class _UsersPageState extends State<UsersPage> {
 
   @override
   Widget build(BuildContext context) {
-    UserViewmodel _userVM = Provider.of<UserViewmodel>(context);
     return Scaffold(
         appBar: AppBar(
           title: Text("Users"),
-          actions: [
-            IconButton(
-              icon: Icon(Icons.refresh),
-              onPressed: () => getUsers(_lastUser),
-            )
-          ],
         ),
         body: _users == null
             ? Center(child: CircularProgressIndicator())
             : _generateUsersList());
   }
 
-  void getUsers(AppUser lastUser) async {
+  void getUsers() async {
+    final _userVM = Provider.of<UserViewmodel>(context, listen: false);
     if (!_hasMore) return;
     if (_isLoading) return;
     setState(() {
       _isLoading = true;
     });
-    QuerySnapshot _usersSnapshot;
-    if (lastUser == null) {
-      _usersSnapshot = await FirebaseFirestore.instance
-          .collection('users')
-          .orderBy('username')
-          .limit(_limit)
-          .get();
+    List<AppUser> users = await _userVM.getPaginatedUsers(_lastUser, _limit);
+    if (_users == null) {
       _users = [];
+      _users.addAll(users);
     } else {
-      _usersSnapshot = await FirebaseFirestore.instance
-          .collection('users')
-          .orderBy('username')
-          .startAfter([lastUser.username])
-          .limit(_limit)
-          .get();
+      _users.addAll(users);
     }
-    if (_usersSnapshot.docs.length < _limit) _hasMore = false;
-    _usersSnapshot.docs.forEach((element) {
-      _users.add(AppUser.mapFrom(element.data()));
-    });
+    if (users.length < _limit) _hasMore = false;
     _lastUser = _users.last;
     setState(() {
       _isLoading = false;
@@ -101,6 +86,7 @@ class _UsersPageState extends State<UsersPage> {
   }
 
   Widget _loadingIndicator() {
+    print('object');
     return _isLoading
         ? Padding(
             padding: const EdgeInsets.all(8.0),
