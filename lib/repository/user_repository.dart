@@ -193,4 +193,14 @@ class UserRepository implements AuthBase {
       return allUsers;
     }
   }
+
+  Future<List<Message>> getPaginatedMessages(String senderID, String receiverID,
+      Message lastMessage, int limit) async {
+    if (appMode == AppMode.DEBUG) {
+      return await Future.value(List<Message>());
+    } else {
+      return await _dbService.getPaginatedMessages(
+          senderID, receiverID, lastMessage, limit);
+    }
+  }
 }

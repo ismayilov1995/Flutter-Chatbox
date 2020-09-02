@@ -2,6 +2,7 @@ import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_chatbox/models/chat.dart';
 import 'package:flutter_chatbox/models/user.dart';
+import 'package:flutter_chatbox/viewmodel/chat_viewmodel.dart';
 import 'package:flutter_chatbox/viewmodel/user_model.dart';
 import 'package:provider/provider.dart';
 
@@ -43,12 +44,14 @@ class _ConversationPageState extends State<ConversationPage> {
                         trailing: Text(chat.timeDifference),
                         onTap: () => Navigator.of(context, rootNavigator: true)
                             .push(CupertinoPageRoute(
-                                builder: (context) => ChatPage(
-                                    sender: _userVM.user,
-                                    receiver: AppUser.idAndImage(
-                                        userID: chat.talk,
-                                        username: chat.talkUsername,
-                                        profileUrl: chat.talkProfilephoto)))),
+                                builder: (context) => ChangeNotifierProvider(
+                                    create: (context) => ChatViewmodel(
+                                        sender: _userVM.user,
+                                        receiver: AppUser.idAndImage(
+                                            userID: chat.talk,
+                                            username: chat.talkUsername,
+                                            profileUrl: chat.talkProfilephoto)),
+                                    child: ChatPage()))),
                       );
                     });
               } else {

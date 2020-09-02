@@ -121,7 +121,10 @@ class FirestoreDbService implements DbBase {
 
   @override
   Future<DateTime> showTime(String userID) async {
-    await _firestore.collection('utils').doc(userID).set({"time": FieldValue.serverTimestamp()});
+    await _firestore
+        .collection('utils')
+        .doc(userID)
+        .set({"time": FieldValue.serverTimestamp()});
     var timeMap = await _firestore.collection('utils').doc(userID).get();
     Timestamp time = timeMap.data()['time'];
     return time.toDate();
@@ -149,5 +152,32 @@ class FirestoreDbService implements DbBase {
       _users.add(AppUser.mapFrom(element.data()));
     });
     return _users;
+  }
+
+  Future<List<Message>> getPaginatedMessages(String senderID, String receiverID,
+      Message lastMessage, int limit) async {
+    QuerySnapshot _messagesSnapshot;
+    List<Message> _messages = [];
+    if (lastMessage == null) {
+      _messagesSnapshot = await FirebaseFirestore.instance
+          .collection("chat")
+          .doc(senderID + "--" + receiverID)
+          .collection("messages")
+          .orderBy("createdAt", descending: true)
+          .limit(limit)
+          .get();
+    } else {
+      _messagesSnapshot = await FirebaseFirestore.instance
+          .collection("chat")
+          .doc(senderID + "--" + receiverID)
+          .collection("messages")
+          .orderBy("createdAt", descending: true)
+          .startAfter([lastMessage.createdAt])
+          .limit(limit)
+          .get();
+    }
+    _messages.addAll(
+        _messagesSnapshot.docs.map((e) => Message.fromMap(e.data())).toList());
+    return _messages;
   }
 }

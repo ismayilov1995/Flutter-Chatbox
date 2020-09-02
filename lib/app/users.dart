@@ -2,6 +2,7 @@ import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_chatbox/app/chat_page.dart';
 import 'package:flutter_chatbox/models/user.dart';
+import 'package:flutter_chatbox/viewmodel/chat_viewmodel.dart';
 import 'package:flutter_chatbox/viewmodel/user_model.dart';
 import 'package:flutter_chatbox/viewmodel/users_viewmodel.dart';
 import 'package:provider/provider.dart';
@@ -29,6 +30,7 @@ class _UsersPageState extends State<UsersPage> {
 
   @override
   Widget build(BuildContext context) {
+    final _userVM = Provider.of<UserViewmodel>(context, listen: false);
     return Scaffold(
         appBar: AppBar(
           title: Text("Users"),
@@ -65,7 +67,7 @@ class _UsersPageState extends State<UsersPage> {
                       itemBuilder: (context, index) {
                         if (index == model.users.length - 1 &&
                             model.hasMoreLoading) return _loadingIndicator();
-                        return _userListItem(index);
+                        return _userListItem(index, model, _userVM);
                       }),
                 );
               default:
@@ -86,10 +88,8 @@ class _UsersPageState extends State<UsersPage> {
     );
   }
 
-  Widget _userListItem(int index) {
-    final _userVM = Provider.of<UserViewmodel>(context, listen: false);
-    final _usersVM = Provider.of<UsersViewmodel>(context, listen: false);
-    AppUser user = _usersVM.users[index];
+  Widget _userListItem(int index, UsersViewmodel model, UserViewmodel userVM) {
+    AppUser user = model.users[index];
     return ListTile(
       leading: CircleAvatar(
         backgroundImage: NetworkImage(user.profileUrl),
@@ -99,9 +99,12 @@ class _UsersPageState extends State<UsersPage> {
       trailing: Icon(Icons.arrow_right),
       onTap: () =>
           Navigator.of(context, rootNavigator: true).push(CupertinoPageRoute(
-              builder: (context) => ChatPage(
-                    sender: _userVM.user,
-                    receiver: user,
+              builder: (context) => ChangeNotifierProvider(
+                    create: (context) => ChatViewmodel(
+                      sender: userVM.user,
+                      receiver: user,
+                    ),
+                    child: ChatPage(),
                   ))),
     );
   }
