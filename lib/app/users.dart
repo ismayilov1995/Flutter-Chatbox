@@ -54,7 +54,7 @@ class _UsersPageState extends State<UsersPage> {
       _isLoading = true;
     });
     List<AppUser> users = await _userVM.getPaginatedUsers(_lastUser, _limit);
-    if (_users == null) {
+    if (_lastUser == null) {
       _users = [];
       _users.addAll(users);
     } else {
@@ -68,25 +68,44 @@ class _UsersPageState extends State<UsersPage> {
   }
 
   Widget _generateUsersList() {
-    return ListView.builder(
-        controller: _scrollController,
-        itemCount: _users.length,
-        itemBuilder: (context, index) {
-          AppUser user = _users[index];
-          if (index == _users.length - 1) return _loadingIndicator();
-          return ListTile(
-            leading: CircleAvatar(
-              backgroundImage: NetworkImage(user.profileUrl),
-            ),
-            title: Text(user.username),
-            subtitle: Text(user.email),
-            trailing: Icon(Icons.arrow_right),
-          );
-        });
+    if (_users.length <= 1)
+      return Center(
+          child: Column(
+            mainAxisSize: MainAxisSize.min,
+            children: [
+              Text("No one use this app, you're first 🙃", style: Theme.of(context).textTheme.headline6,),
+              SizedBox(height: 16,),
+              FlatButton.icon(
+                  onPressed: _onRefresh,
+                  icon: Icon(Icons.refresh),
+                  label: Text('Refresh'))
+            ],
+          ));
+    final _userVM = Provider.of<UserViewmodel>(context, listen: false);
+    int userIndex =
+        _users.indexWhere((element) => element.userID == _userVM.user.userID);
+    if (userIndex >= 0) _users.removeAt(userIndex);
+    return RefreshIndicator(
+      onRefresh: _onRefresh,
+      child: ListView.builder(
+          controller: _scrollController,
+          itemCount: _users.length,
+          itemBuilder: (context, index) {
+            AppUser user = _users[index];
+            if (index == _users.length - 1) return _loadingIndicator();
+            return ListTile(
+              leading: CircleAvatar(
+                backgroundImage: NetworkImage(user.profileUrl),
+              ),
+              title: Text(user.username),
+              subtitle: Text(user.email),
+              trailing: Icon(Icons.arrow_right),
+            );
+          }),
+    );
   }
 
   Widget _loadingIndicator() {
-    print('object');
     return _isLoading
         ? Padding(
             padding: const EdgeInsets.all(8.0),
@@ -97,6 +116,14 @@ class _UsersPageState extends State<UsersPage> {
             ),
           )
         : null;
+  }
+
+  Future<void> _onRefresh() async {
+    _lastUser = null;
+    _hasMore = true;
+    getUsers();
+    await Future.delayed(Duration(seconds: 1));
+    return;
   }
 }
 
