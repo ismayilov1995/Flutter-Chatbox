@@ -130,7 +130,7 @@ class _ChatPageState extends State<ChatPage> {
         children: [
           Container(
             padding: EdgeInsets.all(10),
-            margin: EdgeInsets.all(10),
+            margin: EdgeInsets.fromLTRB(50,10,10,10),
             decoration: BoxDecoration(
                 color: _msgColorFrom, borderRadius: BorderRadius.circular(16)),
             child: Text(message.message),
@@ -147,7 +147,7 @@ class _ChatPageState extends State<ChatPage> {
         children: [
           Container(
             padding: EdgeInsets.all(10),
-            margin: EdgeInsets.all(10),
+            margin: EdgeInsets.fromLTRB(10,10,50,10),
             decoration: BoxDecoration(
                 color: _msgColorTo, borderRadius: BorderRadius.circular(16)),
             child: Text(message.message),
