@@ -184,4 +184,23 @@ class UserRepository implements AuthBase {
     timeago.setLocaleMessages('az', timeago.AzMessages());
     item.timeDifference = timeago.format(time.subtract(duration), locale: 'az');
   }
+
+  Future<List<AppUser>> getPaginatedUsers(AppUser lastUser, int limit) async {
+    if (appMode == AppMode.DEBUG) {
+      return await Future.value(List<AppUser>());
+    } else {
+      allUsers = await _dbService.getPaginatedUsers(lastUser, limit);
+      return allUsers;
+    }
+  }
+
+  Future<List<Message>> getPaginatedMessages(String senderID, String receiverID,
+      Message lastMessage, int limit) async {
+    if (appMode == AppMode.DEBUG) {
+      return await Future.value(List<Message>());
+    } else {
+      return await _dbService.getPaginatedMessages(
+          senderID, receiverID, lastMessage, limit);
+    }
+  }
 }

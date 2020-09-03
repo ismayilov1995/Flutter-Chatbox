@@ -4,6 +4,8 @@ import 'package:flutter_chatbox/app/profile.dart';
 import 'package:flutter_chatbox/app/tab_items.dart';
 import 'package:flutter_chatbox/app/users.dart';
 import 'package:flutter_chatbox/models/user.dart';
+import 'package:flutter_chatbox/viewmodel/users_viewmodel.dart';
+import 'package:provider/provider.dart';
 
 import 'conversation_page.dart';
 
@@ -26,9 +28,13 @@ class _HomePageState extends State<HomePage> {
 
   Map<TabItem, Widget> allPages() {
     return {
-      TabItem.AllUsers: UsersPage(),
+      TabItem.AllUsers: ChangeNotifierProvider(
+        create: (context) => UsersViewmodel(),
+        child: UsersPage(),
+      ),
       TabItem.Chats: ConversationPage(),
-      TabItem.Profile: ProfilePage()};
+      TabItem.Profile: ProfilePage()
+    };
   }
 
   @override

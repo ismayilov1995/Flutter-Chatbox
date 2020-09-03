@@ -6,7 +6,6 @@ import 'package:flutter_chatbox/models/message.dart';
 import 'package:flutter_chatbox/models/user.dart';
 import 'package:flutter_chatbox/repository/user_repository.dart';
 import 'package:flutter_chatbox/services/auth_base.dart';
-import 'package:flutter_chatbox/services/database_base.dart';
 
 enum ViewState { IDLE, BUSY }
 
@@ -152,7 +151,7 @@ class UserViewmodel with ChangeNotifier implements AuthBase {
     return _userRepository.getChatMessages(senderID, receiverID);
   }
 
-  Future<bool> sendMessage(Message message) async {
-    return await _userRepository.sendMessage(message);
+  Future<List<AppUser>> getPaginatedUsers(AppUser lastUser, int limit) async {
+    return await _userRepository.getPaginatedUsers(lastUser, limit);
   }
 }

@@ -9,6 +9,8 @@ abstract class DbBase {
 
   Future<List<AppUser>> getUsers();
 
+  Future<List<AppUser>> getPaginatedUsers(AppUser lastUser, int limit);
+
   Future<List<Chat>> getConversations(String userID);
 
   Future<bool> updateUsername(String userID, String username);

@@ -1,8 +1,10 @@
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
-import 'file:///E:/Android/AndroidStudioProjects/flutter_chatbox/lib/app/chat_page.dart';
+import 'package:flutter_chatbox/app/chat_page.dart';
 import 'package:flutter_chatbox/models/user.dart';
+import 'package:flutter_chatbox/viewmodel/chat_viewmodel.dart';
 import 'package:flutter_chatbox/viewmodel/user_model.dart';
+import 'package:flutter_chatbox/viewmodel/users_viewmodel.dart';
 import 'package:provider/provider.dart';
 
 class UsersPage extends StatefulWidget {
@@ -11,74 +13,108 @@ class UsersPage extends StatefulWidget {
 }
 
 class _UsersPageState extends State<UsersPage> {
+  bool _isLoading = false;
+  ScrollController _scrollController = ScrollController();
+
+  @override
+  void initState() {
+    super.initState();
+    _scrollController.addListener(() {
+      if (_scrollController.offset >=
+              _scrollController.position.minScrollExtent &&
+          !_scrollController.position.outOfRange) {
+        loadMoreUsers();
+      }
+    });
+  }
+
   @override
   Widget build(BuildContext context) {
-    UserViewmodel _userVM = Provider.of<UserViewmodel>(context);
+    final _userVM = Provider.of<UserViewmodel>(context, listen: false);
     return Scaffold(
-      appBar: AppBar(
-        title: Text("Users"),
-      ),
-      body: Center(
-        child: RefreshIndicator(
-          onRefresh: _onRefresh,
-          child: FutureBuilder<List<AppUser>>(
-            future: _userVM.getUsers(),
-            builder: (context, snap) {
-              if (snap.connectionState == ConnectionState.waiting)
+        appBar: AppBar(
+          title: Text("Users"),
+        ),
+        body: Consumer<UsersViewmodel>(
+          builder: (context, model, child) {
+            switch (model.state) {
+              case UsersViewState.BUSY:
                 return Center(child: CircularProgressIndicator());
-              if (snap.hasData) {
-                var users = snap.data;
-                if (snap.data.length <= 1)
+              case UsersViewState.LOADED:
+                if (model.users.length == 1)
                   return Center(
                       child: Column(
                     mainAxisSize: MainAxisSize.min,
                     children: [
-                      Text("No one use this app, you're first 🙃", style: Theme.of(context).textTheme.headline6,),
-                      SizedBox(height: 16,),
+                      Text(
+                        "No one use this app, you're first 🙃",
+                        style: Theme.of(context).textTheme.headline6,
+                      ),
+                      SizedBox(
+                        height: 16,
+                      ),
                       FlatButton.icon(
-                          onPressed: _onRefresh,
+                          onPressed: model.onRefresh,
                           icon: Icon(Icons.refresh),
                           label: Text('Refresh'))
                     ],
                   ));
-                int index = users.indexWhere(
-                    (element) => element.userID == _userVM.user.userID);
-                users.removeAt(index);
-                return ListView.builder(
-                    itemCount: users.length,
-                    itemBuilder: (context, index) {
-                      AppUser user = users[index];
-                      return ListTile(
-                        leading: CircleAvatar(
-                          backgroundImage: NetworkImage(user.profileUrl),
-                        ),
-                        title: Text(user.username),
-                        subtitle: Text(user.email),
-                        trailing: Icon(Icons.arrow_right),
-                        onTap: () => Navigator.of(context, rootNavigator: true)
-                            .push(CupertinoPageRoute(
-                                builder: (context) => ChatPage(
-                                      sender: _userVM.user,
-                                      receiver: user,
-                                    ))),
-                      );
-                    });
-              } else if (snap.hasError) {
-                print(snap.error.toString());
-                return Text('Get an error');
-              } else {
-                return Text("User not found");
-              }
-            },
-          ),
-        ),
+                return RefreshIndicator(
+                  onRefresh: model.onRefresh,
+                  child: ListView.builder(
+                      controller: _scrollController,
+                      itemCount: model.users.length,
+                      itemBuilder: (context, index) {
+                        if (index == model.users.length - 1 &&
+                            model.hasMoreLoading) return _loadingIndicator();
+                        return _userListItem(index, model, _userVM);
+                      }),
+                );
+              default:
+                return Center(
+                  child: Text('Error'),
+                );
+            }
+          },
+        ));
+  }
+
+  Widget _loadingIndicator() {
+    return Padding(
+      padding: const EdgeInsets.all(8.0),
+      child: Center(
+        child: CircularProgressIndicator(),
       ),
     );
   }
 
-  Future<void> _onRefresh() async {
-    setState(() {});
-    await Future.delayed(Duration(seconds: 1));
-    return;
+  Widget _userListItem(int index, UsersViewmodel model, UserViewmodel userVM) {
+    AppUser user = model.users[index];
+    return ListTile(
+      leading: CircleAvatar(
+        backgroundImage: NetworkImage(user.profileUrl),
+      ),
+      title: Text(user.username),
+      subtitle: Text(user.email),
+      trailing: Icon(Icons.arrow_right),
+      onTap: () =>
+          Navigator.of(context, rootNavigator: true).push(CupertinoPageRoute(
+              builder: (context) => ChangeNotifierProvider(
+                    create: (context) => ChatViewmodel(
+                      sender: userVM.user,
+                      receiver: user,
+                    ),
+                    child: ChatPage(),
+                  ))),
+    );
+  }
+
+  void loadMoreUsers() async {
+    final _usersVM = Provider.of<UsersViewmodel>(context, listen: false);
+    if (!_isLoading) {
+      _isLoading = true;
+      await _usersVM.getMoreUsers();
+      _isLoading = false;
+    }
   }
 }
