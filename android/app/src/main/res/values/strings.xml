@@ -3,6 +3,7 @@
     <string name="app_name">Flutter Chatbox</string>
     <string name="facebook_app_id">258659445093154</string>
     <string name="fb_login_protocol_scheme">fb258659445093154</string>
+    <string name="default_notification_channel_id">Defo by me</string>
 </resources>
 
 
