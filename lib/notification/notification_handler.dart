@@ -13,13 +13,14 @@ Future<void> myBackgroundMessageHandler(Map<String, dynamic> message) async {
 class NotificationHandler {
   FirebaseMessaging _fcm = FirebaseMessaging();
 
-  NotificationHandler._internal();
-
-  static final NotificationHandler _singleton = NotificationHandler._internal();
-
-  factory NotificationHandler() {
-    return _singleton;
-  }
+  // Using locator
+  // NotificationHandler._internal();
+  //
+  // static final NotificationHandler _singleton = NotificationHandler._internal();
+  //
+  // factory NotificationHandler() {
+  //   return _singleton;
+  // }
 
   initFCMNotification(BuildContext context) async {
     _fcm.subscribeToTopic("all");

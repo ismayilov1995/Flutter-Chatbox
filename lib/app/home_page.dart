@@ -4,6 +4,7 @@ import 'package:flutter_chatbox/app/profile.dart';
 import 'package:flutter_chatbox/app/tab_items.dart';
 import 'package:flutter_chatbox/app/users.dart';
 import 'package:flutter_chatbox/common_widget/responsive_alertdialog.dart';
+import 'package:flutter_chatbox/locator.dart';
 import 'package:flutter_chatbox/models/user.dart';
 import 'package:flutter_chatbox/notification/notification_handler.dart';
 import 'package:flutter_chatbox/viewmodel/users_viewmodel.dart';
@@ -22,8 +23,8 @@ class HomePage extends StatefulWidget {
 }
 
 class _HomePageState extends State<HomePage> {
+  final NotificationHandler _handler = locator<NotificationHandler>();
   TabItem _currentTab = TabItem.AllUsers;
-  final FirebaseMessaging _firebaseMessaging = FirebaseMessaging();
   Map<TabItem, GlobalKey<NavigatorState>> navigatorKeys = {
     TabItem.AllUsers: GlobalKey<NavigatorState>(),
     TabItem.Chats: GlobalKey<NavigatorState>(),
@@ -44,7 +45,8 @@ class _HomePageState extends State<HomePage> {
   @override
   void initState() {
     super.initState();
-    NotificationHandler().initFCMNotification(context);
+    // NotificationHandler().initFCMNotification(context);
+    _handler.initFCMNotification(context);
   }
 
   @override

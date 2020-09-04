@@ -1,3 +1,4 @@
+import 'package:flutter_chatbox/notification/notification_handler.dart';
 import 'package:flutter_chatbox/repository/user_repository.dart';
 import 'package:flutter_chatbox/services/fake_auth_service.dart';
 import 'package:flutter_chatbox/services/firebase_auth_service.dart';
@@ -13,4 +14,5 @@ void setupLocator() {
   locator.registerLazySingleton(() => FirebaseStorageService());
   locator.registerLazySingleton(() => FakeAuthService());
   locator.registerLazySingleton(() => UserRepository());
+  locator.registerLazySingleton(() => NotificationHandler());
 }
