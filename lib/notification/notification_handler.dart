@@ -2,6 +2,14 @@ import 'package:firebase_messaging/firebase_messaging.dart';
 import 'package:flutter/src/widgets/framework.dart';
 import 'package:flutter_chatbox/common_widget/responsive_alertdialog.dart';
 
+Future<void> myBackgroundMessageHandler(Map<String, dynamic> message) async {
+  if (message.containsKey('data')) {
+    final dynamic data = message['data'];
+    print(data.toString() + 'dddddddddddddddddddddd');
+  }
+  return Future<void>.value();
+}
+
 class NotificationHandler {
   FirebaseMessaging _fcm = FirebaseMessaging();
 
@@ -16,6 +24,7 @@ class NotificationHandler {
   initFCMNotification(BuildContext context) async {
     _fcm.subscribeToTopic("all");
     _fcm.configure(
+      onBackgroundMessage: myBackgroundMessageHandler,
       onMessage: (Map<String, dynamic> message) async {
         print("onMessage: $message");
         ResponsiveAlertDialog(
