@@ -46,7 +46,7 @@ class ChatViewmodel with ChangeNotifier {
   }
 
   Future<bool> sendMessage(Message message) async {
-    return await _userRepository.sendMessage(message);
+    return await _userRepository.sendMessage(message, sender);
   }
 
   Future<void> getPaginatedMessages() async {

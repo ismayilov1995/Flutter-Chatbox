@@ -191,4 +191,10 @@ class FirestoreDbService implements DbBase {
     await _firestore.collection('tokens').doc(userID).delete();
     return true;
   }
+
+  Future<String> getTokenFromDB(String to) async {
+    var token = await _firestore.doc("tokens/$to").get();
+    if (token != null) return token.data()['token'];
+    return null;
+  }
 }

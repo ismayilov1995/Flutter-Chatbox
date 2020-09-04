@@ -45,7 +45,7 @@ class NotificationHandler {
     await flutterLocalNotificationsPlugin.initialize(initializationSettings,
         onSelectNotification: onSelectNotification);
 
-    // _fcm.subscribeToTopic("all");
+    _fcm.subscribeToTopic("all");
     // String token = await _fcm.getToken();
 
     _fcm.onTokenRefresh.listen((newToken) async {

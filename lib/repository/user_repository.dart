@@ -9,6 +9,7 @@ import 'package:flutter_chatbox/services/fake_auth_service.dart';
 import 'package:flutter_chatbox/services/firebase_auth_service.dart';
 import 'package:flutter_chatbox/services/firebase_storage_service.dart';
 import 'package:flutter_chatbox/services/firestore_db_service.dart';
+import 'package:flutter_chatbox/services/send_notification_service.dart';
 import 'package:timeago/timeago.dart' as timeago;
 
 enum AppMode { DEBUG, RELEASE }
@@ -18,9 +19,12 @@ class UserRepository implements AuthBase {
   FakeAuthService _fakeAuthService = locator<FakeAuthService>();
   FirestoreDbService _dbService = locator<FirestoreDbService>();
   FirebaseStorageService _storageService = locator<FirebaseStorageService>();
+  SendNotificationService _notificationService =
+      locator<SendNotificationService>();
 
   AppMode appMode = AppMode.RELEASE;
   List<AppUser> allUsers = List<AppUser>();
+  Map<String, String> allUsersToken = Map<String, String>();
 
   @override
   Future<AppUser> currentUser() async {
@@ -182,11 +186,23 @@ class UserRepository implements AuthBase {
     }
   }
 
-  Future<bool> sendMessage(Message message) async {
+  Future<bool> sendMessage(Message message, AppUser sender) async {
     if (appMode == AppMode.DEBUG) {
       return Future.value(true);
     } else {
-      return await _dbService.sendMessage(message);
+      var dbResult = await _dbService.sendMessage(message);
+      var token;
+      if (dbResult) {
+        if (allUsersToken.containsKey(message.to)) {
+          token = allUsersToken[message.to];
+        } else {
+          token = await _dbService.getTokenFromDB(message.to);
+          if (token != null) allUsersToken['message.to'] = token;
+        }
+        if (token != null)
+          await _notificationService.sendNotification(message, sender, token);
+      }
+      return dbResult;
     }
   }
 
