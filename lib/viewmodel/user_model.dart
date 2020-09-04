@@ -66,7 +66,8 @@ class UserViewmodel with ChangeNotifier implements AuthBase {
     try {
       state = ViewState.BUSY;
       _user = await _userRepository.signInWithGoogle();
-      return _user;
+      if (_user != null) return _user;
+      return null;
     } finally {
       state = ViewState.IDLE;
     }

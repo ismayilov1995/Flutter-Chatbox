@@ -57,10 +57,15 @@ class UserRepository implements AuthBase {
       return await _fakeAuthService.signInWithGoogle();
     } else {
       AppUser _user = await _firebaseAuthService.signInWithGoogle();
-      bool res = await _dbService.saveUser(_user);
-      if (res)
-        return await _dbService.getUser(_user.userID);
-      else
+      if (_user != null) {
+        bool res = await _dbService.saveUser(_user);
+        if (res) {
+          return await _dbService.getUser(_user.userID);
+        } else {
+          await _firebaseAuthService.signOut();
+          return null;
+        }
+      } else
         return null;
     }
   }
@@ -71,10 +76,15 @@ class UserRepository implements AuthBase {
       return await _fakeAuthService.signInWithFacebook();
     } else {
       AppUser _user = await _firebaseAuthService.signInWithFacebook();
-      bool res = await _dbService.saveUser(_user);
-      if (res)
-        return await _dbService.getUser(_user.userID);
-      else
+      if (_user != null) {
+        bool res = await _dbService.saveUser(_user);
+        if (res) {
+          return await _dbService.getUser(_user.userID);
+        } else {
+          await _firebaseAuthService.signOut();
+          return null;
+        }
+      } else
         return null;
     }
   }

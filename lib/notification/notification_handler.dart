@@ -43,6 +43,8 @@ class NotificationHandler {
         onSelectNotification: onSelectNotification);
 
     _fcm.subscribeToTopic("all");
+    String token = await _fcm.getToken();
+    print("token" + token);
     _fcm.configure(
       onBackgroundMessage: myBackgroundMessageHandler,
       onMessage: (Map<String, dynamic> message) async {

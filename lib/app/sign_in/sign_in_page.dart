@@ -1,6 +1,7 @@
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter/scheduler.dart';
 import 'package:flutter_chatbox/app/sign_in/email_password_login_create.dart';
 import 'package:flutter_chatbox/common_widget/responsive_alertdialog.dart';
 import 'package:flutter_chatbox/viewmodel/user_model.dart';
@@ -8,7 +9,24 @@ import 'package:provider/provider.dart';
 import '../../common_widget/social_login_button.dart';
 import '../error_handler.dart';
 
-class SignInPage extends StatelessWidget {
+FirebaseAuthException authError;
+
+class SignInPage extends StatefulWidget {
+  @override
+  _SignInPageState createState() => _SignInPageState();
+}
+
+class _SignInPageState extends State<SignInPage> {
+  @override
+  void initState() {
+    super.initState();
+    if (authError != null) {
+      SchedulerBinding.instance.addPostFrameCallback((timeStamp) {
+        _showAlertDialog(authError.code, context);
+      });
+    }
+  }
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -81,7 +99,7 @@ class SignInPage extends StatelessWidget {
     try {
       await _userVM.signInWithGoogle();
     } on FirebaseAuthException catch (e) {
-      _showAlertDialog(e.code, context);
+      authError = e;
     }
   }
 
@@ -90,7 +108,7 @@ class SignInPage extends StatelessWidget {
     try {
       await _userVM.signInWithFacebook();
     } on FirebaseAuthException catch (e) {
-      _showAlertDialog(e.code, context);
+      authError = e;
     }
   }
 
