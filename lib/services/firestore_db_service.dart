@@ -9,7 +9,12 @@ class FirestoreDbService implements DbBase {
 
   @override
   Future<bool> saveUser(AppUser user) async {
-    await _firestore.collection("users").doc(user.userID).set(user.toMap());
+    DocumentSnapshot _userSnapshot =
+        await _firestore.collection("users").doc(user.userID).get();
+    if (_userSnapshot.data() == null) {
+      await _firestore.collection("users").doc(user.userID).set(user.toMap());
+      return true;
+    }
     return true;
   }
 
@@ -179,5 +184,17 @@ class FirestoreDbService implements DbBase {
     _messages.addAll(
         _messagesSnapshot.docs.map((e) => Message.fromMap(e.data())).toList());
     return _messages;
+  }
+
+  @override
+  Future<bool> removeTokenOnSignOut(String userID) async {
+    await _firestore.collection('tokens').doc(userID).delete();
+    return true;
+  }
+
+  Future<String> getTokenFromDB(String to) async {
+    var token = await _firestore.doc("tokens/$to").get();
+    if (token != null) return token.data()['token'];
+    return null;
   }
 }

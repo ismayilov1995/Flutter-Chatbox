@@ -3,6 +3,7 @@ class AppErrors {
     print(errorCode);
     switch (errorCode) {
       case 'email-already-in-use':
+      case 'account-exists-with-different-credential':
         return 'Email already in use';
       case 'user-not-found':
         return 'User not found or deleted by admin';

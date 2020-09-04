@@ -29,8 +29,8 @@ class _EmailLoginPageState extends State<EmailLoginPage> {
     _linkText =
         _formType == FormType.Login ? "Create Account" : 'Login exists account';
     if (_userVM.user != null) {
-      Future.delayed(
-          Duration(milliseconds: 20), () => Navigator.of(context).pop());
+      Future.delayed(Duration(milliseconds: 1),
+          () => Navigator.of(context).popUntil(ModalRoute.withName('/')));
     }
 
     return Scaffold(

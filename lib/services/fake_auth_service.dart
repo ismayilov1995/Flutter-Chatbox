@@ -16,7 +16,7 @@ class FakeAuthService implements AuthBase {
   }
 
   @override
-  Future<bool> signOut() {
+  Future<bool> signOut(String userID) {
     return Future.value(true);
   }
 

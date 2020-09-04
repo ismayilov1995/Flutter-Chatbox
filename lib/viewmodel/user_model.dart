@@ -51,11 +51,11 @@ class UserViewmodel with ChangeNotifier implements AuthBase {
   }
 
   @override
-  Future<bool> signOut() async {
+  Future<bool> signOut(String userID) async {
     try {
       state = ViewState.BUSY;
       _user = null;
-      return await _userRepository.signOut();
+      return await _userRepository.signOut(userID);
     } finally {
       state = ViewState.IDLE;
     }
@@ -66,7 +66,8 @@ class UserViewmodel with ChangeNotifier implements AuthBase {
     try {
       state = ViewState.BUSY;
       _user = await _userRepository.signInWithGoogle();
-      return _user;
+      if (_user != null) return _user;
+      return null;
     } finally {
       state = ViewState.IDLE;
     }
