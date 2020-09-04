@@ -3,7 +3,9 @@ import 'package:flutter_chatbox/app/custom_buttom_nav.dart';
 import 'package:flutter_chatbox/app/profile.dart';
 import 'package:flutter_chatbox/app/tab_items.dart';
 import 'package:flutter_chatbox/app/users.dart';
+import 'package:flutter_chatbox/common_widget/responsive_alertdialog.dart';
 import 'package:flutter_chatbox/models/user.dart';
+import 'package:flutter_chatbox/notification/notification_handler.dart';
 import 'package:flutter_chatbox/viewmodel/users_viewmodel.dart';
 import 'package:provider/provider.dart';
 import 'package:firebase_messaging/firebase_messaging.dart';
@@ -42,17 +44,7 @@ class _HomePageState extends State<HomePage> {
   @override
   void initState() {
     super.initState();
-    _firebaseMessaging.configure(
-      onMessage: (Map<String, dynamic> message) async {
-        print("onMessage: $message");
-      },
-      onLaunch: (Map<String, dynamic> message) async {
-        print("onLaunch: $message");
-      },
-      onResume: (Map<String, dynamic> message) async {
-        print("onResume: $message");
-      },
-    );
+    NotificationHandler().initFCMNotification(context);
   }
 
   @override
