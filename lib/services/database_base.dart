@@ -22,4 +22,6 @@ abstract class DbBase {
   Future<bool> sendMessage(Message message);
 
   Future<DateTime> showTime(String userID);
+
+  Future<bool> removeTokenOnSignOut(String userID);
 }

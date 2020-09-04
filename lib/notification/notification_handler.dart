@@ -1,8 +1,11 @@
+import 'package:cloud_firestore/cloud_firestore.dart';
+import 'package:firebase_auth/firebase_auth.dart';
 import 'package:firebase_messaging/firebase_messaging.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/src/widgets/framework.dart';
 import 'package:flutter_chatbox/common_widget/responsive_alertdialog.dart';
+import 'package:flutter_chatbox/models/user.dart';
 import 'package:flutter_local_notifications/flutter_local_notifications.dart';
 
 final FlutterLocalNotificationsPlugin flutterLocalNotificationsPlugin =
@@ -42,9 +45,16 @@ class NotificationHandler {
     await flutterLocalNotificationsPlugin.initialize(initializationSettings,
         onSelectNotification: onSelectNotification);
 
-    _fcm.subscribeToTopic("all");
-    String token = await _fcm.getToken();
-    print("token" + token);
+    // _fcm.subscribeToTopic("all");
+    // String token = await _fcm.getToken();
+
+    _fcm.onTokenRefresh.listen((newToken) async {
+      User _currentUser = FirebaseAuth.instance.currentUser;
+      await FirebaseFirestore.instance
+          .doc("tokens/" + _currentUser.uid)
+          .set({"token": newToken});
+    });
+
     _fcm.configure(
       onBackgroundMessage: myBackgroundMessageHandler,
       onMessage: (Map<String, dynamic> message) async {

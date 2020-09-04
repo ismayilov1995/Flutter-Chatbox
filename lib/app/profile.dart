@@ -109,7 +109,7 @@ class _ProfilePageState extends State<ProfilePage> {
 
   void _signOut(BuildContext context) async {
     final _userVM = Provider.of<UserViewmodel>(context, listen: false);
-    await _userVM.signOut();
+    await _userVM.signOut(_userVM.user.userID);
   }
 
   void _confirmSignOut(BuildContext context) async {

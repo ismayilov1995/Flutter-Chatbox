@@ -51,11 +51,11 @@ class UserViewmodel with ChangeNotifier implements AuthBase {
   }
 
   @override
-  Future<bool> signOut() async {
+  Future<bool> signOut(String userID) async {
     try {
       state = ViewState.BUSY;
       _user = null;
-      return await _userRepository.signOut();
+      return await _userRepository.signOut(userID);
     } finally {
       state = ViewState.IDLE;
     }

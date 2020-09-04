@@ -43,11 +43,12 @@ class UserRepository implements AuthBase {
   }
 
   @override
-  Future<bool> signOut() async {
+  Future<bool> signOut(String userID) async {
     if (appMode == AppMode.DEBUG) {
-      return await _fakeAuthService.signOut();
+      return await _fakeAuthService.signOut("s4fsd12fsdf4sdfgdf686");
     } else {
-      return await _firebaseAuthService.signOut();
+      await _dbService.removeTokenOnSignOut(userID);
+      return await _firebaseAuthService.signOut(userID);
     }
   }
 
@@ -62,7 +63,7 @@ class UserRepository implements AuthBase {
         if (res) {
           return await _dbService.getUser(_user.userID);
         } else {
-          await _firebaseAuthService.signOut();
+          await _firebaseAuthService.signOut(_user.userID);
           return null;
         }
       } else
@@ -81,7 +82,7 @@ class UserRepository implements AuthBase {
         if (res) {
           return await _dbService.getUser(_user.userID);
         } else {
-          await _firebaseAuthService.signOut();
+          await _firebaseAuthService.signOut(_user.userID);
           return null;
         }
       } else

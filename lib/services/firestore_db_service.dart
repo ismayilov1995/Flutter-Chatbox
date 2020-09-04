@@ -185,4 +185,10 @@ class FirestoreDbService implements DbBase {
         _messagesSnapshot.docs.map((e) => Message.fromMap(e.data())).toList());
     return _messages;
   }
+
+  @override
+  Future<bool> removeTokenOnSignOut(String userID) async {
+    await _firestore.collection('tokens').doc(userID).delete();
+    return true;
+  }
 }
