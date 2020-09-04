@@ -13,15 +13,13 @@ class SendNotificationService {
       "Authorization": "key=$_firebaseFCMKey"
     };
     String json =
-        '{"to": "$token", "data": {"title": "${sender.username} - new message", "message": "${message.message}", "profileImg": "${sender.profileUrl}"}}';
+        '{"to": "$token", "data": {"title": "${sender.username} - new message", "message": "${message.message}", "profileImg": "${sender.profileUrl}", "sender": "${sender.userID}", "username": "${sender.username}"}}';
 
     http.Response response =
         await http.post(endPoint, headers: header, body: json);
     if (response.statusCode == 200) {
-      print('alindi kocero');
       return true;
     } else {
-      print('yerror verdi');
       return false;
     }
   }

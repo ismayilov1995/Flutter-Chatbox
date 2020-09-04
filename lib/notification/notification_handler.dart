@@ -1,4 +1,6 @@
+import 'dart:convert';
 import 'dart:io';
+import 'dart:async';
 
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
@@ -6,10 +8,14 @@ import 'package:firebase_messaging/firebase_messaging.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/src/widgets/framework.dart';
+import 'package:flutter_chatbox/app/chat_page.dart';
 import 'package:flutter_chatbox/models/user.dart';
+import 'package:flutter_chatbox/viewmodel/chat_viewmodel.dart';
+import 'package:flutter_chatbox/viewmodel/user_model.dart';
 import 'package:flutter_local_notifications/flutter_local_notifications.dart';
 import 'package:http/http.dart' as http;
 import 'package:path_provider/path_provider.dart';
+import 'package:provider/provider.dart';
 
 final FlutterLocalNotificationsPlugin flutterLocalNotificationsPlugin =
     FlutterLocalNotificationsPlugin();
@@ -35,7 +41,10 @@ class NotificationHandler {
   //   return _singleton;
   // }
 
+  BuildContext _context;
+
   initFCMNotification(BuildContext context) async {
+    _context = context;
     var initializationSettingsAndroid =
         AndroidInitializationSettings('@mipmap/ic_launcher');
     var initializationSettingsIOS = IOSInitializationSettings(
@@ -74,36 +83,48 @@ class NotificationHandler {
   }
 
   static void showNotification(Map<String, dynamic> message) async {
-    try{
-    var userURLPath =
-        await _downloadAndSaveImage(message['data']['profileImg'], 'largeIcon');
-    var me = Person(
-      name: message['data']['title'],
-      key: '1',
-      icon: BitmapFilePathAndroidIcon(userURLPath),
-    );
-    var msgStyle = MessagingStyleInformation(me,
-        messages: [Message(message['data']["message"], DateTime.now(), me)]);
+    try {
+      // var userURLPath = await _downloadAndSaveImage(
+      //     message['data']['profileImg'], 'largeIcon');
+      var me = Person(
+        name: message['data']['title'],
+        key: '1',
+        // icon: BitmapFilePathAndroidIcon(userURLPath),
+      );
+      var msgStyle = MessagingStyleInformation(me,
+          messages: [Message(message['data']["message"], DateTime.now(), me)]);
 
-    var androidPlatformChannelSpecifics = AndroidNotificationDetails(
-        '1234', 'New message', 'yeni mesajlar barede',
-        styleInformation: msgStyle,
-        importance: Importance.Max,
-        priority: Priority.High,
-        ticker: 'ticker');
-    var iOSPlatformChannelSpecifics = IOSNotificationDetails();
-    var platformChannelSpecifics = NotificationDetails(
-        androidPlatformChannelSpecifics, iOSPlatformChannelSpecifics);
-    await flutterLocalNotificationsPlugin.show(0, message['data']['title'],
-        message['data']['message'], platformChannelSpecifics,
-        payload: 'Tapbildadanda ne getsin?');
-    }catch (e){
+      var androidPlatformChannelSpecifics = AndroidNotificationDetails(
+          '1234', 'New message', 'yeni mesajlar barede',
+          styleInformation: msgStyle,
+          importance: Importance.Max,
+          priority: Priority.High,
+          ticker: 'ticker');
+      var iOSPlatformChannelSpecifics = IOSNotificationDetails();
+      var platformChannelSpecifics = NotificationDetails(
+          androidPlatformChannelSpecifics, iOSPlatformChannelSpecifics);
+      await flutterLocalNotificationsPlugin.show(0, message['data']['title'],
+          message['data']['message'], platformChannelSpecifics,
+          payload: jsonEncode(message));
+    } catch (e) {
       print("Error: " + e.toString());
     }
   }
 
   Future onSelectNotification(String payload) async {
-    if (payload != null) print("payload on select: " + payload);
+    final _userVM = Provider.of<UserViewmodel>(_context, listen: false);
+    if (payload != null) {
+      Map<String, dynamic> payloadNotification = await jsonDecode(payload);
+      Navigator.of(_context, rootNavigator: true).push(CupertinoPageRoute(
+          builder: (context) => ChangeNotifierProvider(
+              create: (context) => ChatViewmodel(
+                  sender: _userVM.user,
+                  receiver: AppUser.idAndImage(
+                      userID: payloadNotification['data']['sender'],
+                      username: payloadNotification['data']['username'],
+                      profileUrl: payloadNotification['data']['profileImg'])),
+              child: ChatPage())));
+    }
   }
 
   Future onDidReceiveNotification(
