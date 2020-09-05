@@ -7,7 +7,6 @@ import 'package:firebase_auth/firebase_auth.dart';
 import 'package:firebase_messaging/firebase_messaging.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
-import 'package:flutter/src/widgets/framework.dart';
 import 'package:flutter_chatbox/app/chat_page.dart';
 import 'package:flutter_chatbox/models/user.dart';
 import 'package:flutter_chatbox/viewmodel/chat_viewmodel.dart';
@@ -22,7 +21,6 @@ final FlutterLocalNotificationsPlugin flutterLocalNotificationsPlugin =
 
 Future<void> myBackgroundMessageHandler(Map<String, dynamic> message) async {
   if (message.containsKey('data')) {
-    final dynamic data = message['data'];
     print('bg ya noti geldi');
     NotificationHandler.showNotification(message);
   }

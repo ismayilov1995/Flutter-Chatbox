@@ -11,7 +11,7 @@ class UsersViewmodel with ChangeNotifier {
   UsersViewState _state = UsersViewState.IDLE;
   AppUser _lastUser;
   bool _hasMore = true;
-  static final _limit = 10;
+  static final _limit = 15;
 
   UserRepository _userRepository = locator<UserRepository>();
 

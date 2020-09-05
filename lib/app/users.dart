@@ -65,8 +65,8 @@ class _UsersPageState extends State<UsersPage> {
                       controller: _scrollController,
                       itemCount: model.users.length,
                       itemBuilder: (context, index) {
-                        if (index == model.users.length - 1 &&
-                            model.hasMoreLoading) return _loadingIndicator();
+                        // if (index == model.users.length &&
+                        //     model.hasMoreLoading) return _loadingIndicator();
                         return _userListItem(index, model, _userVM);
                       }),
                 );

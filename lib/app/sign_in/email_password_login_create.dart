@@ -24,7 +24,6 @@ class _EmailLoginPageState extends State<EmailLoginPage> {
   @override
   Widget build(BuildContext context) {
     final _userVM = Provider.of<UserViewmodel>(context);
-    _passCtrl.text = '7090698';
     _buttonText = _formType == FormType.Login ? 'Login' : 'SignUp';
     _linkText =
         _formType == FormType.Login ? "Create Account" : 'Login exists account';
@@ -59,7 +58,6 @@ class _EmailLoginPageState extends State<EmailLoginPage> {
                 height: 16,
               ),
               TextFormField(
-                initialValue: "ismayil@emre.com",
                 keyboardType: TextInputType.emailAddress,
                 decoration: InputDecoration(
                     prefixIcon: Icon(Icons.mail),

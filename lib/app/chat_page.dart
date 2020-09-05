@@ -1,10 +1,7 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
-import 'package:flutter/scheduler.dart';
 import 'package:flutter_chatbox/models/message.dart';
-import 'package:flutter_chatbox/models/user.dart';
 import 'package:flutter_chatbox/viewmodel/chat_viewmodel.dart';
-import 'package:flutter_chatbox/viewmodel/user_model.dart';
 import 'package:intl/intl.dart';
 import 'package:provider/provider.dart';
 
